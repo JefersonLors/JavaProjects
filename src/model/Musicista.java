@@ -2,18 +2,18 @@ package model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
-import enums.Habilidade;
-import enums.Sexo;
-import enums.TipoContato;
-import exceptions.ContatoInvalidoException;
-import exceptions.DataNascimentoInvalidaException;
-import exceptions.FormatoContatoInadequadoException;
-import exceptions.NomeInvalidoException;
-import exceptions.SexoInvalidoException;
-import exceptions.ValorNuloException;
+import model.enums.Habilidade;
+import model.enums.Sexo;
+import model.enums.TipoContato;
+import model.exceptions.*;
+
+import model.utils.Utils;
 
 public class Musicista {
+	private static long qtdMusicistas;
+	private long codMusicista;
 	private String nome;
 	private Sexo sexo;
 	private Date nascimento;
@@ -22,16 +22,16 @@ public class Musicista {
 	private List<Habilidade> habilidades;
 	private String textoApresent;
 	
-	public Musicista( String nome, Sexo sexo, Date nascimento) 
+	public Musicista( String nome, Sexo sexo, Date nascimento)
 		throws NomeInvalidoException, DataNascimentoInvalidaException, SexoInvalidoException
-	{ 
-		if( !Musicista.validaStringVazia(nome))
+	{
+		if( !Utils.validaStringVazia(nome) )
 			throw new NomeInvalidoException("O nome é obrigatório.");
 		
-		if( !Musicista.validaNascimento(nascimento))
+		if( !Utils.validaNascimento(nascimento) )
 			throw new DataNascimentoInvalidaException("A data de nascimento não pode ser maior que a data atual.");
 		
-		if( !Musicista.validaSexo(sexo))
+		if( !Utils.validaSexo(sexo) )
 			throw new SexoInvalidoException("O sexo é obrigatório.");
 		
 		this.nome = nome;
@@ -39,6 +39,7 @@ public class Musicista {
 		this.nascimento = nascimento;
 		this.contatos = new ArrayList<Contato>();
 		this.habilidades = new ArrayList<Habilidade>();
+		this.codMusicista = this.qtdMusicistas++;
 	}
 	
 	//setters
@@ -46,7 +47,7 @@ public class Musicista {
 	public void setNome(String nome) 
 		throws NomeInvalidoException
 	{
-		if( !Musicista.validaStringVazia(nome))
+		if( !Utils.validaStringVazia(nome))
 			throw new NomeInvalidoException("O nome é obrigatório.");
 		this.nome = nome;
 	}
@@ -54,7 +55,7 @@ public class Musicista {
 	public void setSexo(Sexo sexo) 
 		throws SexoInvalidoException
 	{
-		if( !Musicista.validaSexo(sexo))
+		if( !Utils.validaSexo(sexo))
 			throw new SexoInvalidoException("O sexo é obrigatório.");
 		this.sexo = sexo;
 	}
@@ -62,7 +63,7 @@ public class Musicista {
 	public void setNascimento(Date nascimento) 
 		throws DataNascimentoInvalidaException
 	{
-		if( !Musicista.validaNascimento(nascimento))
+		if( !Utils.validaNascimento(nascimento))
 			throw new DataNascimentoInvalidaException("A data de nascimento não pode ser maior que a data atual.");
 		this.nascimento = nascimento;
 	}
@@ -72,17 +73,51 @@ public class Musicista {
 	{
 		this.contatos.add(new Contato(tipo, valor));
 	}
-	
-	public void adicionaHabilidade( Habilidade nova ) { 
-		this.habilidades.add(nova);
+	public void adicionaHabilidade( Habilidade habilidadeNova )
+		throws HabilidadeRepetidaException, ValorNuloException
+	{
+		if( Utils.isNull(habilidadeNova) )
+			throw new ValorNuloException("A habilidade não pode ser nula.");
+
+		for( var habilidade : this.habilidades ){
+			if( habilidade.equals(habilidadeNova))
+				throw new HabilidadeRepetidaException("O musicista já possui essa habilidade.");
+		}
+
+		this.habilidades.add(habilidadeNova);
 	}
-	
-	//getters
-	
+	public void deleteHabilidade( Habilidade habilidadeAntiga )
+		throws MusicistaSemHabilidadeException
+	{
+		if(!this.habilidades.remove(habilidadeAntiga))
+			throw new MusicistaSemHabilidadeException("O musicista não possui essa habilidade.");
+	}
 	public void setTextoApresent(String textoApresent) {
 		this.textoApresent = textoApresent;
 	}
-	
+	public Contato atualizaContato(TipoContato tipo, String valorAntigo, String valorNovo)
+			throws FormatoContatoInadequadoException, ContatoInvalidoException, ValorNuloException
+	{
+		for(var contato : this.contatos) {
+			if( contato.getTipo().equals(tipo) && contato.getValor().equals(valorAntigo)) {
+				contato.setValor(valorNovo);
+				return contato;
+			}
+		}
+		throw new ContatoInvalidoException("Este contato não existe");
+	}
+	public void deletaContato(TipoContato tipo, String valor)
+			throws ContatoInvalidoException, ValorNuloException
+	{
+		Contato contato = this.getContato(tipo, valor);
+
+		if( Utils.isNull(contato) )
+			throw new ContatoInvalidoException("Este contato não existe");
+
+		this.contatos.remove(contato);
+	}
+	//getters
+	public long getCodMusicista() { return codMusicista; }
 	public String getNome() {
 		return nome;
 	}
@@ -102,6 +137,20 @@ public class Musicista {
 	public List<Contato> getContatos(){
 		return new ArrayList<Contato>(this.contatos);
 	}
+	public Contato getContato( TipoContato tipo, String valor )
+			throws ContatoInvalidoException, ValorNuloException
+	{
+		if( Utils.isNull(valor))
+			throw new ValorNuloException("O contato não pode ser nulo.");
+
+		for(var contato : this.contatos) {
+			if( contato.getTipo().equals(tipo) && contato.getValor().equals(valor)) {
+				return contato;
+			}
+		}
+
+		throw new ContatoInvalidoException("Este contato não existe");
+	}
 	
 	public List<String> getHabilidades(){
 		ArrayList<String> resultado = new ArrayList<String>();
@@ -117,52 +166,19 @@ public class Musicista {
 	}
 	
 	//utilitárias
-
 	public void setFoto(byte foto) {
 		this.foto = foto;
 	}
-
-	private static boolean validaSexo(Sexo sexo) {
-		return !Musicista.isNull(sexo);
-	}
-	
-	private static boolean validaStringVazia(String nome) {
-		if( nome == null || nome.isEmpty() || nome.isBlank() ) { 
-			return false;
-		}
-		return true;
-	}
-	
-	private static boolean validaNascimento( Date nascimento ) { 
-		// Verifica se a data nascimento não é maior que a data atual
-		return true;
-	}
-	
-	private static boolean isNull( Object obj ) {
-		return obj == null ? true : false;
-	}
-	
-	public Contato atualizaContato( TipoContato tipo, String valorAntigo, String valorNovo) 
-		throws FormatoContatoInadequadoException, ContatoInvalidoException, ValorNuloException
-	{
-		for(var contato : this.contatos) {
-			if( contato.getTipo().equals(tipo) && contato.getValor().equals(valorAntigo)) {
-				contato.setValor(valorNovo);
-				return contato;
-			}
-		}
-		throw new ContatoInvalidoException("Este contato não existe");
-	}
 	
 	// outros
-	
 	@Override
 	public String toString() {
 		String resultado = "";
 		int qtdHabilidades = this.getHabilidades().size();
 		int qtdContatos = this.getContatos().size();
 		
-		resultado += "Nome: " + this.getNome() + "\n" +
+		resultado += "Código: " + this.getCodMusicista() + "\n" +
+				     "Nome: " + this.getNome() + "\n" +
 				     "Nascimento: " + this.getNascimento() + "\n" +
 				     "Sexo: " + this.getSexo() + "\n";
 		
@@ -176,9 +192,7 @@ public class Musicista {
 				resultado += "\n     " + habilidade.toString();
 			}
 		}
-		
 		resultado += "\n";
-		
 		resultado += qtdContatos > 1 ? "Contatos: " : "Contato: ";
 		
 		if( qtdContatos == 0 ) {
@@ -189,9 +203,7 @@ public class Musicista {
 				resultado += "\n     " + contato.toString();
 			}
 		}
-		
 		return resultado;
-			   
 	}
 	
 }

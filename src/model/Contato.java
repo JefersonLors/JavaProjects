@@ -1,8 +1,8 @@
 package model;
 
-import enums.TipoContato;
-import exceptions.FormatoContatoInadequadoException;
-import exceptions.ValorNuloException;
+import model.enums.TipoContato;
+import model.exceptions.FormatoContatoInadequadoException;
+import model.exceptions.ValorNuloException;
 
 public class Contato {
 	private TipoContato tipo;
@@ -52,6 +52,7 @@ public class Contato {
 		this.valor = valor;
 	}
 
+	@Override
 	public String toString() {
 		return this.tipo + ": " + this.valor;
 	}

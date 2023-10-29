@@ -1,4 +1,4 @@
-package exceptions;
+package model.exceptions;
 
 public class ValorNuloException extends Exception {
 
