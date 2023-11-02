@@ -19,9 +19,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import interfaces.IGComum;
-
-public class IGCandidato extends JDialog implements IGComum {
+public class IGCandidato extends JDialog {
 	// JTextField
 	private JTextField textCandNomeCadastra;
 	private JTextField textFieldCandCtt1;
@@ -84,10 +82,12 @@ public class IGCandidato extends JDialog implements IGComum {
 		this.inicializaInterfaceGrafica();
 	}
 	
-	public void instanciaComponentes() {
+	private void instanciaComponentes() {
 		// JTextField
 		this.textCandNomeCadastra = new JTextField();
 		this.textCandNomePesquisa = new JTextField();
+		this.textFieldCandCtt1 = new JTextField();
+		this.textCandCtt2 = new JTextField();
 
 		// JTabbedPane, JPanel
 		this.tabbedPaneCandidato = new JTabbedPane();
@@ -106,7 +106,7 @@ public class IGCandidato extends JDialog implements IGComum {
 		this.lblCandHabilidade = new JLabel();
 		this.lblCandCtt1 = new JLabel();
 		this.lblCandCtt2 = new JLabel();
-		this.lblCandTextoApresentacao = new JLabel("Apresentação");
+		this.lblCandTextoApresentacao = new JLabel();
 
 		// JButton, JSeparator
 		this.btnCandPesquisar = new JButton();
@@ -125,18 +125,17 @@ public class IGCandidato extends JDialog implements IGComum {
 		this.textAreaCandApresentacao = new JTextArea();
 		this.formattedTextFieldCandNascimento = new JFormattedTextField();
 		this.scrollPane = new JScrollPane();
-
+		this.tableCandLista = new JTable();
 	}
-	
-	@Override
-	public void inicializaInterfaceGrafica() {
-		setBounds(100, 100, 450, 426);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getContentPane().setLayout(new CardLayout(0, 0));
-		setLocationRelativeTo(this.getFocusOwner());
+
+	private void inicializaInterfaceGrafica() {
+		this.setBounds(100, 100, 450, 426);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.getContentPane().setLayout(new CardLayout(0, 0));
+		this.setLocationRelativeTo(this.getFocusOwner());
 		
 		this.tabbedPaneCandidato.setTabPlacement(JTabbedPane.TOP);
-		getContentPane().add(this.tabbedPaneCandidato, "name_217006642080300");
+		this.getContentPane().add(this.tabbedPaneCandidato, "name_217006642080300");
 		
 		this.tabbedPaneCandidato.addTab("Pesquisar", null, panelCandPesquisa, null);
 		this.panelCandPesquisa.setLayout(null);
@@ -222,7 +221,7 @@ public class IGCandidato extends JDialog implements IGComum {
 		this.lblCandCtt1.setBounds(22, 134, 68, 14);
 		this.panelCandCadastrar.add(this.lblCandCtt1);
 
-		this.textFieldCandCtt1 = new JTextField();
+
 		this.textFieldCandCtt1.setBounds(188, 131, 112, 20);
 		this.panelCandCadastrar.add(this.textFieldCandCtt1);
 		this.textFieldCandCtt1.setColumns(10);
@@ -230,8 +229,8 @@ public class IGCandidato extends JDialog implements IGComum {
 		this.lblCandCtt2.setText("Contato");
 		this.lblCandCtt2.setBounds(22, 171, 51, 14);
 		this.panelCandCadastrar.add(lblCandCtt2);
-		
-		this.textCandCtt2 = new JTextField();
+
+
 		this.textCandCtt2.setBounds(189, 168, 112, 20);
 		this.panelCandCadastrar.add(this.textCandCtt2);
 		this.textCandCtt2.setColumns(10);
@@ -252,11 +251,9 @@ public class IGCandidato extends JDialog implements IGComum {
 		this.formattedTextFieldCandNascimento.setBounds(287, 52, 112, 20);
 		this.panelCandCadastrar.add(this.formattedTextFieldCandNascimento);
 
-		getContentPane().add(scrollPane, "name_220870457178100");
-		
-		this.tableCandLista = new JTable();
-		scrollPane.setViewportView(this.tableCandLista);
+		this.getContentPane().add(scrollPane, "name_220870457178100");
 
+		this.scrollPane.setViewportView(this.tableCandLista);
 	}
 
 }
