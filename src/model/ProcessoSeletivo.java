@@ -57,7 +57,6 @@ public class ProcessoSeletivo {
         musicistaDesatu.setFoto(musicistaAtu.getFoto());
         musicistaDesatu.setNascimento(musicistaAtu.getNascimento());
         musicistaDesatu.setSexo(musicistaAtu.getSexo());
-        musicistaDesatu.setTextoApresent(musicistaAtu.getTextoApresent());
 
         for( var contato : musicistaDesatu.getContatos()){
             musicistaDesatu.deletaContato(contato.getTipo(), contato.getValor());

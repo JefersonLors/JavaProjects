@@ -20,7 +20,6 @@ public class Musicista {
 	private byte foto;
 	private List<Contato> contatos;
 	private List<Habilidade> habilidades;
-	private String textoApresent;
 	
 	public Musicista( String nome, Sexo sexo, Date nascimento)
 		throws NomeInvalidoException, DataNascimentoInvalidaException, SexoInvalidoException
@@ -92,9 +91,6 @@ public class Musicista {
 		if(!this.habilidades.remove(habilidadeAntiga))
 			throw new MusicistaSemHabilidadeException("O musicista não possui essa habilidade.");
 	}
-	public void setTextoApresent(String textoApresent) {
-		this.textoApresent = textoApresent;
-	}
 	public Contato atualizaContato(TipoContato tipo, String valorAntigo, String valorNovo)
 			throws FormatoContatoInadequadoException, ContatoInvalidoException, ValorNuloException
 	{
@@ -128,10 +124,6 @@ public class Musicista {
 	
 	public Date getNascimento() {
 		return nascimento;
-	}
-	
-	public String getTextoApresent() {
-		return textoApresent;
 	}
 	
 	public List<Contato> getContatos(){
