@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class IGMenuPrincipal extends JFrame{
+	//comentário teste
 	private JFrame menuPrincipalFrame;
 	private JPanel panelMenuPrincipal;
 	private JLabel lblMenuPrincipal;
