@@ -7,7 +7,8 @@ public class Venda {
 
     public Venda() {
     }
-
+    public Venda( long id, long idProduto, long quantidade) {
+    }
     public long getId() {
         return id;
     }
