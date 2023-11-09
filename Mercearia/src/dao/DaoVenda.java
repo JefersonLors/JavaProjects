@@ -1,6 +1,7 @@
 package dao;
 
 import dao.Idao.IDaoVenda;
+import exceptions.QuantidadeInvalidaException;
 import exceptions.VendaInexistenteException;
 import model.Venda;
 
@@ -19,7 +20,7 @@ public class DaoVenda implements IDaoVenda {
         this.conn = new PostgreSQLConnection().getConnection();
     }
     @Override
-    public List<Venda> getTodasAsVendas() throws SQLException {
+    public List<Venda> getTodasAsVendas() throws SQLException, QuantidadeInvalidaException {
         String query = "SELECT * " +
                        "FROM VENDAS;";
 
@@ -41,7 +42,7 @@ public class DaoVenda implements IDaoVenda {
 
     @Override
     public Venda getVendaPorId(long id)
-            throws SQLException, VendaInexistenteException {
+            throws SQLException, VendaInexistenteException, QuantidadeInvalidaException {
         String query = "SELECT * " +
                        "FROM VENDAS " +
                        "WHERE id = ?;";

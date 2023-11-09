@@ -1,6 +1,8 @@
 package dao;
 
 import dao.Idao.IDaoProduto;
+import exceptions.NomeInvalidoException;
+import exceptions.PrecoInvalidoException;
 import exceptions.ProdutoInexistenteException;
 import model.Produto;
 
@@ -17,7 +19,8 @@ public class DaoProduto implements IDaoProduto {
     }
 
     @Override
-    public List<Produto> getTodosOsProdutos() throws SQLException {
+    public List<Produto> getTodosOsProdutos()
+            throws SQLException, NomeInvalidoException, PrecoInvalidoException {
         String query = "SELECT * " +
                        "FROM produtos;";
 
@@ -37,7 +40,7 @@ public class DaoProduto implements IDaoProduto {
 
     @Override
     public Produto getProdutoPorId(long id)
-            throws SQLException, ProdutoInexistenteException {
+            throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException {
         String query = "SELECT *" +
                        "FROM produtos " +
                        "WHERE id = ?;";
@@ -53,7 +56,7 @@ public class DaoProduto implements IDaoProduto {
 
     @Override
     public Produto putProdutoPorId(Produto produtoAtualizado, long id)
-            throws SQLException, ProdutoInexistenteException {
+            throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException {
         String query = "UPDATE Produtos SET" +
                             "nome = ?" +
                             "preco = ?;";
