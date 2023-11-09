@@ -59,6 +59,6 @@ public class Venda {
     }
 
     public String toString(){
-        return this.id + " " + this.idProduto + " " + this.quantidade;
+        return "[" + this.id + "] [" + this.idProduto + "] - " + this.quantidade;
     }
 }

@@ -73,6 +73,6 @@ public class Produto {
 
     @Override
     public String toString(){
-        return this.id + " " + this.nome + " " + this.preco;
+        return "[" + this.id + "] - " + this.nome + " - R$" + this.preco;
     }
 }
