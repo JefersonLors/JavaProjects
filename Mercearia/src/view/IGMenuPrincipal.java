@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JSeparator;
 import javax.swing.JButton;
 
@@ -23,16 +25,17 @@ public class IGMenuPrincipal {
 	// Elementos do tipo JLabel
 	private JLabel lblMenuPrincipal;
 
+	// Tela de produtos
+	private IGProduto igProduto;
 
-	/**
-	 * Launch the application.
-	 */
+	// Tela de vendas
+	private IGVenda igVenda;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					IGMenuPrincipal window = new IGMenuPrincipal();
-					window.frame.setVisible(true);
+					new IGMenuPrincipal();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -40,16 +43,15 @@ public class IGMenuPrincipal {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public IGMenuPrincipal() {
 		instanciaComponentes();
-		initialize();
+		initializeInterfaceGrafica();
 	}
 	private void instanciaComponentes() {
 		// Elementos do tipo JFrame
 		this.frame = new JFrame();
+		this.igVenda = new IGVenda(this.frame);
+		this.igProduto = new IGProduto(this.frame);
 
 		// Elementos do tipo JButton
 		this.btnMenuVenda = new JButton();
@@ -60,17 +62,15 @@ public class IGMenuPrincipal {
 
 		// Elemento do tipo JLabel
 		this.lblMenuPrincipal = new JLabel();
-
-
 	}
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
+
+	private void initializeInterfaceGrafica() {
 		this.frame.setBounds(100, 100, 450, 300);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.getContentPane().setLayout(null);
-	
+		this.frame.setLocation(800, 300);
+		this.frame.setVisible(true);
+
 		this.lblMenuPrincipal.setText("Menu Principal");
 		this.lblMenuPrincipal.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		this.lblMenuPrincipal.setBounds(140, 11, 154, 45);
@@ -82,11 +82,25 @@ public class IGMenuPrincipal {
 		this.btnMenuProduto.setText("Produto");
 		this.btnMenuProduto.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnMenuProduto.setBounds(147, 91, 126, 45);
+		this.btnMenuProduto.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				igProduto.setModal(true);
+				igProduto.setVisible(true);
+			}
+		});
 		this.frame.getContentPane().add(this.btnMenuProduto);
 	
 		this.btnMenuVenda.setText("Venda");
 		this.btnMenuVenda.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnMenuVenda.setBounds(147, 167, 126, 45);
+		this.btnMenuVenda.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				igVenda.setModal(true);
+				igVenda.setVisible(true);
+			}
+		});
 		this.frame.getContentPane().add(this.btnMenuVenda);
 	}
 }

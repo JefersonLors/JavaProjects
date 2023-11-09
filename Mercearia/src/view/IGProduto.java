@@ -1,23 +1,17 @@
 package view;
 
-import java.awt.EventQueue;
+import java.awt.*;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-import java.awt.CardLayout;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import java.awt.Font;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
 public class IGProduto extends JDialog{
-
-	// Elementos do tipo JFrame
-	private JFrame frame;
-
 	// Elementos do tipo JTextField
 	private JTextField textProdCadNome;
 	private JTextField textProdCadPreco;
@@ -47,15 +41,13 @@ public class IGProduto extends JDialog{
 	private JButton btnProdListLimpar;
 	private JButton btnProdListPesquisar;
 
-	public IGProduto() {
+	public IGProduto( Frame owner) {
+		super(owner);
 		instanciaComponentes();
-		initialize();
+		initializeInterfaceGrafica();
 	}
 	
 	private void instanciaComponentes() {
-		// Elementos do tipo JFrame
-		this.frame = new JFrame();
-
 		// Elementos do tipo JTabbedPane e JPanel
 		this.tabbedPaneProduto = new JTabbedPane();
 		this.panelCadastrarProduto = new JPanel();
@@ -83,17 +75,14 @@ public class IGProduto extends JDialog{
 		this.textListNome = new JTextField();
 	}
 
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		this.frame.setBounds(100, 100, 450, 300);
-		this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.frame.getContentPane().setLayout(new CardLayout(0, 0));
+	private void initializeInterfaceGrafica() {
+		this.setBounds(100, 100, 450, 300);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.getContentPane().setLayout(new CardLayout(0, 0));
+		this.setLocationRelativeTo(this.getFocusOwner());
 
 		this.tabbedPaneProduto.setTabPlacement(JTabbedPane.TOP);
-		this.frame.getContentPane().add(this.tabbedPaneProduto, "name_271883838618499");
+		this.getContentPane().add(this.tabbedPaneProduto, "name_271883838618499");
 
 		this.tabbedPaneProduto.addTab("Cadastrar", null, this.panelCadastrarProduto, null);
 		this.panelCadastrarProduto.setLayout(null);
