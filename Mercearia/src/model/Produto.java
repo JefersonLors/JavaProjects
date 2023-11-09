@@ -19,6 +19,17 @@ public class Produto {
         this.nome = nome;
         this.preco = preco;
     }
+    public Produto( String nome, double preco)
+            throws NomeInvalidoException, PrecoInvalidoException
+    {
+        if( this.validaNomeVazioOuNulo(nome))
+            throw new NomeInvalidoException("O nome do produto não pode ser nulo");
+        if( this.validaPrecoNegatio(preco))
+            throw new PrecoInvalidoException("O preco não pode ser negativo");
+        this.id = -1;
+        this.nome = nome;
+        this.preco = preco;
+    }
     public Produto( ) { }
     public long getId() {
         return id;
@@ -50,7 +61,7 @@ public class Produto {
     }
 
     private static boolean validaNomeVazioOuNulo(String nome){
-        if( nome == null || nome.isBlank() || nome.isEmpty() )
+        if( nome.isBlank() || nome.isEmpty() )
             return true;
         return false;
     }
@@ -58,5 +69,10 @@ public class Produto {
         if( preco < 0)
             return true;
         return false;
+    }
+
+    @Override
+    public String toString(){
+        return "[" + this.id + "] - " + this.nome + " - R$" + this.preco;
     }
 }
