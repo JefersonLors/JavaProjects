@@ -41,37 +41,46 @@ public class DaoProduto implements IDaoProduto {
     @Override
     public Produto getProdutoPorId(long id)
             throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException {
-        String query = "SELECT *" +
+        String query = "SELECT * " +
                        "FROM produtos " +
                        "WHERE id = ?;";
 
         this.pStatement = conn.prepareStatement(query);
+        this.pStatement.setLong(1, id);
         ResultSet resultSet = this.pStatement.executeQuery();
 
-        if( resultSet == null )
+        if( !resultSet.next() )
             throw new ProdutoInexistenteException("O id "+ id + " não está associado a nenhum produto.");
 
-        return new Produto( resultSet.getLong(1), resultSet.getString(2), resultSet.getDouble(3));
+        return new Produto( resultSet.getInt("id"), resultSet.getString("nome"), resultSet.getDouble("preco"));
     }
 
     @Override
-    public Produto putProdutoPorId(Produto produtoAtualizado, long id)
+    public Produto putProdutoPorId(Produto produtoAtualizado)
             throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException {
-        String query = "UPDATE Produtos SET" +
-                            "nome = ?" +
-                            "preco = ?;";
+        String query = "UPDATE Produtos SET " +
+                            "nome = ?, " +
+                            "preco = ? " +
+                        "WHERE id = ?;";
 
-        Produto produtoBD = this.getProdutoPorId(id);
+        Produto produtoBD = this.getProdutoPorId(produtoAtualizado.getId());
 
-        if ( produtoBD != null ){
-            this.pStatement = conn.prepareStatement(query);
-            this.pStatement.setString(1, produtoAtualizado.getNome());
-            this.pStatement.setDouble(2, produtoAtualizado.getPreco());
-            this.pStatement.executeQuery();
-            return produtoAtualizado;
-        }
+        Produto produtoResultante = new Produto();
 
-        return null;
+        produtoResultante.setId(produtoBD.getId());
+
+        String nomeProdutoAtulizado = produtoAtualizado.getNome();
+
+        produtoResultante.setNome( nomeProdutoAtulizado.isBlank() ? produtoBD.getNome() : nomeProdutoAtulizado);
+        produtoResultante.setPreco( produtoAtualizado.getPreco());
+
+        this.pStatement = conn.prepareStatement(query);
+        this.pStatement.setString(1, produtoResultante.getNome());
+        this.pStatement.setDouble(2, produtoResultante.getPreco());
+        this.pStatement.setLong(3, produtoResultante.getId());
+        this.pStatement.executeUpdate();
+
+        return produtoResultante;
     }
 
     @Override
@@ -81,7 +90,7 @@ public class DaoProduto implements IDaoProduto {
         this.pStatement = conn.prepareStatement(query);
         this.pStatement.setString(1, produtoNovo.getNome());
         this.pStatement.setDouble(2, produtoNovo.getPreco());
-        this.pStatement.executeQuery();
+        this.pStatement.executeUpdate();
 
         return produtoNovo;
     }

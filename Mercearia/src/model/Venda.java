@@ -14,6 +14,14 @@ public class Venda {
         this.idProduto = idProduto;
         this.quantidade = quantidade;
     }
+
+    public Venda( long idProduto, long quantidade) throws QuantidadeInvalidaException {
+        if( this.validaQuantidadeMenorUm(quantidade))
+            throw new QuantidadeInvalidaException("A quantidade de produto vendido não pode ser menor que 1");
+        this.id = -1;
+        this.idProduto = idProduto;
+        this.quantidade = quantidade;
+    }
     public Venda() {
     }
     public long getId() {
@@ -48,5 +56,9 @@ public class Venda {
             return true;
         }
         return false;
+    }
+
+    public String toString(){
+        return this.id + " " + this.idProduto + " " + this.quantidade;
     }
 }

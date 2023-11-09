@@ -12,7 +12,7 @@ public interface IDaoProduto {
     List<Produto> getTodosOsProdutos() throws SQLException, NomeInvalidoException, PrecoInvalidoException;
     Produto getProdutoPorId(long id)
             throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException;
-    Produto putProdutoPorId(Produto produtoAtualizado, long id)
+    Produto putProdutoPorId(Produto produtoAtualizado)
             throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException;
     Produto postProduto(Produto produtoNovo) throws SQLException;
 }

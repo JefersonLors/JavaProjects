@@ -46,10 +46,13 @@ public class DaoVenda implements IDaoVenda {
         String query = "SELECT * " +
                        "FROM VENDAS " +
                        "WHERE id = ?;";
+
         this.pStatement = conn.prepareStatement(query);
         this.pStatement.setLong(1, id);
-
         ResultSet resultSet = this.pStatement.executeQuery();
+
+        if( !resultSet.next() )
+            throw new VendaInexistenteException("O id " + id + " não está associado a nenhuma venda.");
 
         return new Venda(
                 resultSet.getLong(1),
@@ -64,8 +67,8 @@ public class DaoVenda implements IDaoVenda {
                        "values (?, ?);";
         this.pStatement = conn.prepareStatement(query);
         this.pStatement.setLong(1,  novaVenda.getIdProduto());
-        this.pStatement.setLong(1,  novaVenda.getQuantidade());
-        this.pStatement.executeQuery();
+        this.pStatement.setLong(2,  novaVenda.getQuantidade());
+        this.pStatement.executeUpdate();
         return novaVenda;
     }
 }
