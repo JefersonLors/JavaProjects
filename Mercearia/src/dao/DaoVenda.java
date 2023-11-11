@@ -20,11 +20,11 @@ public class DaoVenda implements IDaoVenda {
         this.conn = new PostgreSQLConnection().getConnection();
     }
     @Override
-    public List<Venda> getTodasAsVendas() throws SQLException, QuantidadeInvalidaException {
+    public ArrayList<Venda> getTodasAsVendas() throws SQLException, QuantidadeInvalidaException {
         String query = "SELECT * " +
                        "FROM VENDAS;";
 
-        List<Venda> listaVendas = new ArrayList<Venda>();
+        ArrayList<Venda> listaVendas = new ArrayList<Venda>();
 
         this.pStatement = this.conn.prepareStatement(query);
         ResultSet resultSet = this.pStatement.executeQuery();

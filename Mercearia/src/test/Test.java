@@ -7,7 +7,7 @@ import dao.Idao.IDaoVenda;
 import model.Produto;
 import model.Venda;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Test {
     private IDaoProduto daoProduto;
@@ -17,7 +17,7 @@ public class Test {
         try{
               this.daoProduto = new DaoProduto();
 
-              List<Produto> produtos =  this.daoProduto.getTodosOsProdutos();
+              ArrayList<Produto> produtos =  this.daoProduto.getProdutos();
 
               for( Produto produto : produtos){
                   System.out.println(produto);

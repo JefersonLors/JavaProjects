@@ -1,11 +1,16 @@
 package view;
 
 import dao.DaoProduto;
+import exceptions.NomeInvalidoException;
+import exceptions.PrecoInvalidoException;
 import model.Produto;
+import model.filtros.ProdutoFiltro;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -15,7 +20,7 @@ public class IGProduto extends JDialog{
 	private JTextField textProdCadPreco;
 	private JTextField textProdListCodigo;
 	private JTextField textProdListPreco;
-	private JTextField textListNome;
+	private JTextField textProdListNome;
 
 	// Elementos do tipo JTabbedPane e JPanel
 	private JTabbedPane tabbedPaneProduto;
@@ -72,7 +77,7 @@ public class IGProduto extends JDialog{
 
 		// Elementos do tipo JTextField
 		this.textProdListPreco = new JTextField();
-		this.textListNome = new JTextField();
+		this.textProdListNome = new JTextField();
 		this.textProdCadNome = new JTextField();
 		this.textProdCadPreco = new JTextField();
 		this.textProdListCodigo = new JTextField();
@@ -89,6 +94,7 @@ public class IGProduto extends JDialog{
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.getContentPane().setLayout(new CardLayout(0, 0));
 		this.setLocationRelativeTo(this.getFocusOwner());
+		this.getContentPane().add(this.tabbedPaneProduto, "name_271883838618499");
 
 		// Configura as abas para aparecer no topo
 		this.tabbedPaneProduto.setTabPlacement(JTabbedPane.TOP);
@@ -100,7 +106,6 @@ public class IGProduto extends JDialog{
 		panelListarProduto();
 	}
 	private void panelCadastrarProduto(){
-		this.getContentPane().add(this.tabbedPaneProduto, "name_271883838618499");
 		this.tabbedPaneProduto.addTab("Cadastrar", null, this.panelCadastrarProduto, null);
 		this.panelCadastrarProduto.setLayout(null);
 
@@ -133,6 +138,13 @@ public class IGProduto extends JDialog{
 		this.btnProdCadLimpar.setText("Limpar");
 		this.btnProdCadLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdCadLimpar.setBounds(72, 162, 113, 42);
+		this.btnProdCadLimpar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				textProdCadNome.setText("");
+				textProdCadPreco.setText("");
+			}
+		});
 		this.panelCadastrarProduto.add(this.btnProdCadLimpar);
 
 		this.btnProdCadSalvar.setText("Salvar");
@@ -193,11 +205,12 @@ public class IGProduto extends JDialog{
 		this.btnProdListLimpar.setText("Limpar");
 		this.btnProdListLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdListLimpar.setBounds(93, 167, 113, 42);
-		this.btnProdCadLimpar.addActionListener(new ActionListener() {
+		this.btnProdListLimpar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				textProdCadNome.setText("");
-				textProdCadPreco.setText("");
+				textProdListNome.setText("");
+				textProdListCodigo.setText("");
+				textProdListPreco.setText("");
 			}
 		});
 		this.panelListarProduto.add(this.btnProdListLimpar);
@@ -205,6 +218,37 @@ public class IGProduto extends JDialog{
 		this.btnProdListPesquisar.setText("Pesquisar");
 		this.btnProdListPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdListPesquisar.setBounds(262, 167, 113, 42);
+		this.btnProdListPesquisar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String codigoProduto = textProdListCodigo.getText();
+				String nomeProduto = textProdListNome.getText();
+				String precoProduto = textProdCadPreco.getText();
+
+				ProdutoFiltro produtoFiltro = new ProdutoFiltro();
+
+				try {
+					if( validaCampoTextoVazio(codigoProduto)){
+						produtoFiltro.id = codigoProduto;
+					}
+
+					if( validaCampoTextoVazio(nomeProduto)){
+						produtoFiltro.nome = nomeProduto;
+					}
+					if( validaCampoTextoVazio(precoProduto)){
+						produtoFiltro.preco = precoProduto;
+					}
+					ArrayList<Produto> produtos = daoProduto.getProdutos(produtoFiltro);
+
+					for( Produto item : produtos ){
+						System.out.println(item);
+					}
+
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
+				}
+			}
+		});
 		this.panelListarProduto.add(this.btnProdListPesquisar);
 
 		this.textProdListPreco.setColumns(10);
@@ -221,17 +265,17 @@ public class IGProduto extends JDialog{
 		this.lblProdListarNome.setBounds(47, 126, 59, 19);
 		this.panelListarProduto.add(this.lblProdListarNome);
 
-		this.textListNome.setBounds(105, 127, 273, 20);
-		this.panelListarProduto.add(this.textListNome);
-		this.textListNome.setColumns(10);
+		this.textProdListNome.setBounds(105, 127, 273, 20);
+		this.panelListarProduto.add(this.textProdListNome);
+		this.textProdListNome.setColumns(10);
 	}
-	private boolean validaCampoTextoVazio( String texto){
-		if( texto.isBlank() || texto.isEmpty() ){
+	private static boolean validaCampoTextoVazio( String texto){
+		if( texto.isEmpty() || texto.isBlank() ){
 			return false;
 		}
 		return true;
 	}
-	private boolean validaPrecoProduto( Double precoProduto ){
+	private static boolean validaPrecoProduto( Double precoProduto ){
 		if( precoProduto < 0 ){
 			return false;
 		}

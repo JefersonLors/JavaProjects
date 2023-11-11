@@ -5,6 +5,7 @@ import exceptions.NomeInvalidoException;
 import exceptions.PrecoInvalidoException;
 import exceptions.ProdutoInexistenteException;
 import model.Produto;
+import model.filtros.ProdutoFiltro;
 
 import javax.xml.transform.Result;
 import java.sql.*;
@@ -19,7 +20,7 @@ public class DaoProduto implements IDaoProduto {
     }
 
     @Override
-    public List<Produto> getTodosOsProdutos()
+    public ArrayList<Produto> getProdutos()
             throws SQLException, NomeInvalidoException, PrecoInvalidoException {
         String query = "SELECT * " +
                        "FROM produtos;";
@@ -27,7 +28,36 @@ public class DaoProduto implements IDaoProduto {
         this.pStatement = conn.prepareStatement(query);
         ResultSet resultSet = pStatement.executeQuery();
 
-        List<Produto> listaProdutos = new ArrayList<Produto>();
+        ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
+
+        while( resultSet.next() ){
+            listaProdutos.add(new Produto(
+                    resultSet.getLong(1),
+                    resultSet.getString(2),
+                    resultSet.getDouble(3)));
+        }
+        return listaProdutos;
+    }
+
+    @Override
+    public ArrayList<Produto> getProdutos(ProdutoFiltro produtoFiltro)
+            throws SQLException, NomeInvalidoException, PrecoInvalidoException {
+        if( produtoFiltro == null ) {
+            return this.getProdutos();
+        }
+
+        String query = "SELECT * " +
+                       "FROM produtos ";
+
+        query += this.montaClausulaWhere(produtoFiltro);
+
+        query += ";";
+
+        this.pStatement = conn.prepareStatement(query);
+
+        ResultSet resultSet = pStatement.executeQuery();
+
+        ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
 
         while( resultSet.next() ){
             listaProdutos.add(new Produto(
@@ -93,5 +123,40 @@ public class DaoProduto implements IDaoProduto {
         this.pStatement.executeUpdate();
 
         return produtoNovo;
+    }
+
+    private String montaClausulaWhere( ProdutoFiltro filtro){
+        String query = "";
+        long qtdParam = 0;
+
+        if( filtro.nome != null && !filtro.nome.isBlank() && !filtro.nome.isEmpty() ){
+            if ( qtdParam == 0 ){
+                query += " WHERE ";
+            } else {
+                query += " AND ";
+            }
+            query += "nome like " + "'%" + filtro.nome + "%' ";
+            qtdParam++;
+        }
+        if( filtro.preco != null && !filtro.preco.toString().isBlank() && !filtro.preco.toString().isEmpty() ){
+            if ( qtdParam == 0 ){
+                query += " WHERE ";
+            } else {
+                query += " AND ";
+            }
+            query += "preco = " + filtro.preco + " ";
+            qtdParam++;
+        }
+
+        if( filtro.id != null && !filtro.id.isBlank() && !filtro.id.isEmpty() ){
+            if ( qtdParam == 0 ){
+                query += " WHERE ";
+            } else {
+                query += " AND ";
+            }
+            query += "id = " + filtro.id + " ";
+            qtdParam++;
+        }
+        return query;
     }
 }

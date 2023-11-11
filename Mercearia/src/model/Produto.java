@@ -39,6 +39,24 @@ public class Produto {
         this.id = id;
     }
 
+    public void setId(long id, String nome ) throws NomeInvalidoException {
+        if( validaNomeVazioOuNulo(nome) )
+            throw new NomeInvalidoException("O nome do produto não pode ser nulo");
+        this.id = id;
+        this.nome = nome;
+    }
+    public void setId(long id, String nome, Double preco )
+            throws NomeInvalidoException, PrecoInvalidoException {
+        if( validaNomeVazioOuNulo(nome) )
+            throw new NomeInvalidoException("O nome do produto não pode ser nulo");
+
+        if( this.validaPrecoNegatio(preco))
+            throw new PrecoInvalidoException("O preco não pode ser negativo");
+
+        this.id = id;
+        this.nome = nome;
+        this.preco = preco;
+    }
     public String getNome() {
         return nome;
     }
