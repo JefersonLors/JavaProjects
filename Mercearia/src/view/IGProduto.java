@@ -223,7 +223,7 @@ public class IGProduto extends JDialog{
 			public void actionPerformed(ActionEvent e) {
 				String codigoProduto = textProdListCodigo.getText();
 				String nomeProduto = textProdListNome.getText();
-				String precoProduto = textProdCadPreco.getText();
+				String precoProduto = textProdListPreco.getText();
 
 				ProdutoFiltro produtoFiltro = new ProdutoFiltro();
 

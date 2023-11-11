@@ -144,7 +144,7 @@ public class DaoProduto implements IDaoProduto {
             } else {
                 query += " AND ";
             }
-            query += "preco = " + filtro.preco + " ";
+            query += "UPPER(preco) = " + filtro.preco.toUpperCase() + " ";
             qtdParam++;
         }
 
