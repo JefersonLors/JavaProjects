@@ -4,6 +4,7 @@ import dao.Idao.IDaoVenda;
 import exceptions.QuantidadeInvalidaException;
 import exceptions.VendaInexistenteException;
 import model.Venda;
+import model.filtros.VendaFiltro;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,6 +33,61 @@ public class DaoVenda implements IDaoVenda {
         while( resultSet.next() ){
             listaVendas.add(new Venda(
                 resultSet.getLong(1),
+                    resultSet.getLong(2),
+                    resultSet.getLong(3)
+            ));
+        }
+
+        return listaVendas;
+    }
+    public ArrayList<Venda> getVendas(VendaFiltro filtro) throws SQLException, QuantidadeInvalidaException {
+        if( filtro == null ){
+            return getVendas();
+        }
+        String query = "SELECT * " +
+                "FROM VENDAS ";
+        boolean parametro = false;
+
+        if( filtro.id != null && !filtro.id.isBlank() && !filtro.id.isEmpty() ){
+            if( parametro ){
+                query += " AND ";
+            }else{
+                query += " WHERE ";
+            }
+
+            query += " id = " + filtro.id;
+            parametro = !parametro ? !parametro : parametro;
+        }
+        if( filtro.idProduto != null && !filtro.idProduto.isBlank() && !filtro.idProduto.isEmpty() ){
+            if( parametro ){
+                query += " AND ";
+            }else{
+                query += " WHERE ";
+            }
+
+            query += " idProduto = " + filtro.idProduto;
+            parametro = !parametro ? !parametro : parametro;
+        }
+        if( filtro.quantidade != null && !filtro.quantidade.isBlank() && !filtro.quantidade.isEmpty() ){
+            if( parametro ){
+                query += " AND ";
+            }else{
+                query += " WHERE ";
+            }
+
+            query += " quantidade = " + filtro.quantidade;
+            parametro = !parametro ? !parametro : parametro;
+        }
+        query += "; ";
+
+        this.pStatement = this.conn.prepareStatement(query);
+        ResultSet resultSet = this.pStatement.executeQuery();
+
+        ArrayList<Venda> listaVendas = new ArrayList<Venda>();
+
+        while( resultSet.next() ){
+            listaVendas.add(new Venda(
+                    resultSet.getLong(1),
                     resultSet.getLong(2),
                     resultSet.getLong(3)
             ));

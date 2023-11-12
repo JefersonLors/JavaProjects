@@ -5,6 +5,7 @@ import dao.DaoVenda;
 
 import model.Produto;
 import model.Venda;
+import model.filtros.VendaFiltro;
 
 import javax.swing.*;
 
@@ -231,24 +232,6 @@ public class IGVenda extends JDialog{
 		this.separatorCadListar.setBounds(10, 52, 409, 2);
 		this.panelListarVendas.add(this.separatorCadListar);
 
-		this.btnVendListLimpar.setText("Limpar");
-		this.btnVendListLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.btnVendListLimpar.setBounds(80, 167, 113, 42);
-		this.btnVendListLimpar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				comboBoxListVendProdutos.setSelectedIndex(0);
-				spinnerVendListQtd.setValue(0);
-				textVendListPreco.setText("");
-			}
-		});
-		this.panelListarVendas.add(this.btnVendListLimpar);
-
-		this.btnVendListPesquisar.setText("Pesquisar");
-		this.btnVendListPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.btnVendListPesquisar.setBounds(249, 167, 113, 42);
-		this.panelListarVendas.add(this.btnVendListPesquisar);
-
 		this.spinnerVendListQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.spinnerVendListQtd.setBounds(333, 73, 71, 20);
 
@@ -265,20 +248,56 @@ public class IGVenda extends JDialog{
 		this.comboBoxListVendProdutos.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.comboBoxListVendProdutos.setBounds(80, 72, 137, 22);
 
-		ArrayList<Produto> produtos = null;
-
 		try {
-			produtos = this.daoProduto.getProdutos();
+			this.produtoList = daoProduto.getProdutos();
+			this.comboBoxListVendProdutos.addItem("");
+
+			for( Produto produto : this.produtoList){
+				this.comboBoxListVendProdutos.addItem(produto.getNome());
+			}
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		this.comboBoxListVendProdutos.addItem("");
-
-		for( Produto item : produtos){
-			this.comboBoxListVendProdutos.addItem(item.getNome());
-		}
 
 		this.panelListarVendas.add(this.comboBoxListVendProdutos);
+
+		this.btnVendListLimpar.setText("Limpar");
+		this.btnVendListLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		this.btnVendListLimpar.setBounds(80, 167, 113, 42);
+		this.btnVendListLimpar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBoxListVendProdutos.setSelectedIndex(0);
+				spinnerVendListQtd.setValue(0);
+				textVendListPreco.setText("");
+			}
+		});
+		this.panelListarVendas.add(this.btnVendListLimpar);
+
+		this.btnVendListPesquisar.setText("Pesquisar");
+		this.btnVendListPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		this.btnVendListPesquisar.setBounds(249, 167, 113, 42);
+		this.btnVendListPesquisar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String nomeProduto = comboBoxListVendProdutos.getSelectedItem().toString();
+				String qtdProduto = spinnerVendListQtd.getValue().toString();
+				String precoProduto = textVendListPreco.getText().toString();
+
+				ArrayList<Venda> vendasList = null;
+				try{
+					vendasList = daoVenda.getVendas( new VendaFiltro( nomeProduto, qtdProduto.equals("0") ? "" : qtdProduto, precoProduto ));
+				}catch ( Exception ex ){
+					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+
+				for( Venda venda : vendasList ){
+					System.out.println(venda);
+				}
+			}
+		});
+		this.panelListarVendas.add(this.btnVendListPesquisar);
 
 		this.lblVendaListVenda.setText("Produto");
 		this.lblVendaListVenda.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -306,6 +325,12 @@ public class IGVenda extends JDialog{
 	}
 	private static boolean validaCampoTextoVazio( String texto){
 		if( texto.isEmpty() || texto.isBlank() ){
+			return false;
+		}
+		return true;
+	}
+	private static boolean validaPrecoProduto( Double precoProduto ){
+		if( precoProduto < 0 ){
 			return false;
 		}
 		return true;
