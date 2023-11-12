@@ -8,7 +8,7 @@ import java.util.List;
 import java.sql.SQLException;
 
 public interface IDaoVenda {
-    ArrayList<Venda> getTodasAsVendas() throws SQLException, QuantidadeInvalidaException;
+    ArrayList<Venda> getVendas() throws SQLException, QuantidadeInvalidaException;
     Venda getVendaPorId(long id)
             throws SQLException, VendaInexistenteException, QuantidadeInvalidaException;
     Venda potsVenda(Venda novaVenda) throws SQLException;

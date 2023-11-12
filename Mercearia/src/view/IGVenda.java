@@ -1,19 +1,19 @@
 package view;
 
+import dao.DaoProduto;
+import dao.DaoVenda;
+import exceptions.QuantidadeInvalidaException;
+import model.Produto;
+import model.Venda;
+
 import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JSpinner;
+import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class IGVenda extends JDialog{
 
@@ -53,6 +53,10 @@ public class IGVenda extends JDialog{
 	// JSpinner
 	private JSpinner spinnerVendCadQtd;
 	private JSpinner spinnerVendListQtd;
+
+	private DaoVenda daoVenda;
+
+	private DaoProduto daoProduto;
 
 	public IGVenda( Frame owner) {
 		super(owner);
@@ -97,6 +101,14 @@ public class IGVenda extends JDialog{
 
 		// Componentes de JTextField
 		this.textVendListPreco = new JTextField();
+
+		// DaoVenda
+		try{
+			this.daoVenda = new DaoVenda();
+			this.daoProduto = new DaoProduto();
+		}catch( Exception ex){
+			ex.printStackTrace();
+		}
 	}
 
 	private void initializeInterfaceGrafica() {
@@ -104,12 +116,15 @@ public class IGVenda extends JDialog{
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.getContentPane().setLayout(new CardLayout(0, 0));
 		this.setLocationRelativeTo(this.getFocusOwner());
-
 		this.tabbedPaneVenda.setTabPlacement(JTabbedPane.TOP);
 		this.getContentPane().add(this.tabbedPaneVenda, "name_273216614947300");
 
-		this.panelCadastrarVenda.setLayout(null);
+		this.panelCadastrarProduto();
+		this.panelListarProduto();
+	}
+	private void panelCadastrarProduto(){
 		this.tabbedPaneVenda.addTab("Cadastrar", null, this.panelCadastrarVenda, null);
+		this.panelCadastrarVenda.setLayout(null);
 
 		this.lblCadastrarVenda.setText("Venda - Cadastrar");
 		this.lblCadastrarVenda.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -129,26 +144,56 @@ public class IGVenda extends JDialog{
 		this.lblVendaQtd.setBounds(238, 76, 85, 19);
 		this.panelCadastrarVenda.add(this.lblVendaQtd);
 
+		this.comboBoxVendCadProdutos.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		this.comboBoxVendCadProdutos.setBounds(80, 76, 137, 22);
+
+		ArrayList<Produto> produtos = null;
+
+		try {
+			produtos = this.daoProduto.getProdutos();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		this.comboBoxVendCadProdutos.addItem("");
+
+		for( Produto item : produtos){
+			this.comboBoxVendCadProdutos.addItem(item.getNome());
+		}
+		this.panelCadastrarVenda.add(this.comboBoxVendCadProdutos);
+
+		this.spinnerVendCadQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel();
+		spinnerNumberModel.setMinimum(0);
+		this.spinnerVendCadQtd.setModel(spinnerNumberModel);
+		this.spinnerVendCadQtd.setBounds(333, 77, 71, 20);
+		this.panelCadastrarVenda.add(this.spinnerVendCadQtd);
+
 		this.btnProdCadLimpar.setText("Limpar");
 		this.btnProdCadLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdCadLimpar.setBounds(72, 162, 113, 42);
+		this.btnProdCadLimpar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBoxVendCadProdutos.setSelectedIndex(0);
+				spinnerVendCadQtd.setValue(0);
+			}
+		});
 		this.panelCadastrarVenda.add(this.btnProdCadLimpar);
 
 		this.btnProdCadSalvar.setText("Salvar");
 		this.btnProdCadSalvar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdCadSalvar.setBounds(241, 162, 113, 42);
+		this.btnProdCadSalvar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
 		this.panelCadastrarVenda.add(this.btnProdCadSalvar);
-
-		this.comboBoxVendCadProdutos.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.comboBoxVendCadProdutos.setBounds(80, 76, 137, 22);
-		this.panelCadastrarVenda.add(this.comboBoxVendCadProdutos);
-
-		this.spinnerVendCadQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.spinnerVendCadQtd.setBounds(333, 77, 71, 20);
-		this.panelCadastrarVenda.add(this.spinnerVendCadQtd);
-
-		this.panelListarVendas.setLayout(null);
+	}
+	private void panelListarProduto(){
 		this.tabbedPaneVenda.addTab("Listar", null, this.panelListarVendas, null);
+		this.panelListarVendas.setLayout(null);
 
 		this.lblListarVenda.setText("Venda - Listar");
 		this.lblListarVenda.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -161,6 +206,14 @@ public class IGVenda extends JDialog{
 		this.btnProdListLimpar.setText("Limpar");
 		this.btnProdListLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdListLimpar.setBounds(80, 167, 113, 42);
+		this.btnProdListLimpar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBoxListVendProdutos.setSelectedIndex(0);
+				spinnerVendListQtd.setValue(0);
+				textVendListPreco.setText("");
+			}
+		});
 		this.panelListarVendas.add(this.btnProdListLimpar);
 
 		this.btnProdListPesquisar.setText("Pesquisar");
@@ -170,6 +223,10 @@ public class IGVenda extends JDialog{
 
 		this.spinnerVendListQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.spinnerVendListQtd.setBounds(333, 73, 71, 20);
+
+		SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel();
+		spinnerNumberModel.setMinimum(0);
+		this.spinnerVendListQtd.setModel(spinnerNumberModel);
 		this.panelListarVendas.add(this.spinnerVendListQtd);
 
 		this.lblVendaListQtd.setText("Quantidade");
@@ -179,6 +236,20 @@ public class IGVenda extends JDialog{
 
 		this.comboBoxListVendProdutos.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.comboBoxListVendProdutos.setBounds(80, 72, 137, 22);
+
+		ArrayList<Produto> produtos = null;
+
+		try {
+			produtos = this.daoProduto.getProdutos();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		this.comboBoxListVendProdutos.addItem("");
+
+		for( Produto item : produtos){
+			this.comboBoxListVendProdutos.addItem(item.getNome());
+		}
+
 		this.panelListarVendas.add(this.comboBoxListVendProdutos);
 
 		this.lblVendaListVenda.setText("Produto");
@@ -195,5 +266,8 @@ public class IGVenda extends JDialog{
 		this.textVendListPreco.setColumns(10);
 		this.textVendListPreco.setBounds(93, 120, 86, 20);
 		this.panelListarVendas.add(this.textVendListPreco);
+	}
+	private void tabelaDeProdutos( ArrayList<Venda> resultado ){
+
 	}
 }
