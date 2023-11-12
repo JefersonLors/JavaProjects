@@ -1,18 +1,17 @@
 package view;
 
 import dao.DaoProduto;
-import exceptions.NomeInvalidoException;
-import exceptions.PrecoInvalidoException;
+
 import model.Produto;
 import model.filtros.ProdutoFiltro;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 
 public class IGProduto extends JDialog{
 	// Elementos do tipo JTextField
@@ -44,10 +43,18 @@ public class IGProduto extends JDialog{
 	private JButton btnProdListLimpar;
 	private JButton btnProdListPesquisar;
 
+	// JScrollPane
+	private JScrollPane scrlProdListPesquisar;
+
 	// Dao de produto
 	private DaoProduto daoProduto;
 
-	public IGProduto( Frame owner) {
+	// JTable
+	private JTable tableProdutos;
+
+	// JScrollPane
+	private JScrollPane scrollPane;
+	public IGProduto( Frame owner ) {
 		super(owner);
 		instanciaComponentes();
 		initializeInterfaceGrafica();
@@ -82,6 +89,16 @@ public class IGProduto extends JDialog{
 		this.textProdCadPreco = new JTextField();
 		this.textProdListCodigo = new JTextField();
 
+		// JScrollPane;
+		this.scrlProdListPesquisar =  new JScrollPane();
+
+		// JTable
+		this.tableProdutos = new JTable();
+
+		// JScrollPane
+		this.scrollPane = new JScrollPane(this.tableProdutos);
+
+		// Dao
 		try{
 			this.daoProduto = new DaoProduto();
 		}catch( Exception ex ){
@@ -239,11 +256,7 @@ public class IGProduto extends JDialog{
 						produtoFiltro.preco = precoProduto;
 					}
 					ArrayList<Produto> produtos = daoProduto.getProdutos(produtoFiltro);
-
-					for( Produto item : produtos ){
-						System.out.println(item);
-					}
-
+					tabelaDeProdutos(produtos);
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
 				}
@@ -269,14 +282,59 @@ public class IGProduto extends JDialog{
 		this.panelListarProduto.add(this.textProdListNome);
 		this.textProdListNome.setColumns(10);
 	}
-	private static boolean validaCampoTextoVazio( String texto){
-		if( texto.isEmpty() || texto.isBlank() ){
+	private void tabelaDeProdutos( ArrayList<Produto> resultado ){
+		this.tabbedPaneProduto.remove(this.scrollPane);
+		this.tabbedPaneProduto.addTab("Produtos", null, this.scrollPane, BorderLayout.CENTER);
+		this.tableProdutos.setModel(new AbstractTableModel() {
+			private ArrayList<Produto> produtos = new ArrayList<Produto>(resultado);
+
+			@Override
+			public int getRowCount() {
+				return produtos.size();
+			}
+			@Override
+			public int getColumnCount() {
+				return 3;
+			}
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) {
+				Produto p = produtos.get(rowIndex);
+				switch (columnIndex) {
+					case 0: return p.getId();
+					case 1: return p.getNome();
+					case 2: return p.getPreco();
+					default: return null;
+				}
+			}
+			@Override
+			public String getColumnName(int columnIndex) {
+				switch (columnIndex) {
+					case 0: return "Id";
+					case 1: return "Nome";
+					case 2: return "Preco";
+					default: return null;
+				}
+			}
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				switch (columnIndex) {
+					case 0: return int.class;
+					case 1: return String.class;
+					case 2: return Double.class;
+					default: return null;
+				}
+			}
+		});
+		this.tabbedPaneProduto.setSelectedComponent(this.scrollPane);
+	}
+	private static boolean validaPrecoProduto( Double precoProduto ){
+		if( precoProduto < 0 ){
 			return false;
 		}
 		return true;
 	}
-	private static boolean validaPrecoProduto( Double precoProduto ){
-		if( precoProduto < 0 ){
+	private static boolean validaCampoTextoVazio( String texto){
+		if( texto.isEmpty() || texto.isBlank() ){
 			return false;
 		}
 		return true;
