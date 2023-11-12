@@ -291,10 +291,7 @@ public class IGVenda extends JDialog{
 				}catch ( Exception ex ){
 					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 				}
-
-				for( Venda venda : vendasList ){
-					System.out.println(venda);
-				}
+				tabelaDeProdutos( vendasList);
 			}
 		});
 		this.panelListarVendas.add(this.btnVendListPesquisar);
@@ -314,8 +311,10 @@ public class IGVenda extends JDialog{
 		this.textVendListPreco.setBounds(93, 120, 86, 20);
 		this.panelListarVendas.add(this.textVendListPreco);
 	}
-	private void tabelaDeProdutos( ArrayList<Venda> resultado ){
-
+	private void tabelaDeProdutos( ArrayList<Venda> vendasList ){
+		for( Venda venda : vendasList ){
+			System.out.println(venda);
+		}
 	}
 	private static boolean validaQuantidadeProduto( int quantidade ){
 		if( quantidade < 1 ){
