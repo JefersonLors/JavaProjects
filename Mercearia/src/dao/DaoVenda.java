@@ -61,7 +61,7 @@ public class DaoVenda implements IDaoVenda {
     }
 
     @Override
-    public Venda potsVenda(Venda novaVenda)
+    public Venda postVenda(Venda novaVenda)
             throws SQLException {
         String query = "INSERT INTO VENDAS (idProduto, quantidade) " +
                        "values (?, ?);";

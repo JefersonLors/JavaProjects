@@ -42,7 +42,7 @@ public class Test {
 
 //              Venda venda = this.daoVenda.getVendaPorId(5682);
 
-                Venda novaVenda = this.daoVenda.potsVenda( new Venda( 92, 900 ));
+                Venda novaVenda = this.daoVenda.postVenda( new Venda( 92, 900 ));
 
               System.out.println(novaVenda);
 
