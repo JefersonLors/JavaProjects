@@ -4,10 +4,11 @@ import dao.DaoProduto;
 
 import model.Produto;
 import model.filtros.ProdutoFiltro;
+import utils.Utils;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -155,45 +156,39 @@ public class IGProduto extends JDialog{
 		this.btnProdCadLimpar.setText("Limpar");
 		this.btnProdCadLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdCadLimpar.setBounds(72, 162, 113, 42);
-		this.btnProdCadLimpar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				textProdCadNome.setText("");
-				textProdCadPreco.setText("");
-			}
+		this.btnProdCadLimpar.addActionListener((ActionEvent e) -> {
+			textProdCadNome.setText("");
+			textProdCadPreco.setText("");
 		});
 		this.panelCadastrarProduto.add(this.btnProdCadLimpar);
 
 		this.btnProdCadSalvar.setText("Salvar");
 		this.btnProdCadSalvar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdCadSalvar.setBounds(241, 162, 113, 42);
-		this.btnProdCadSalvar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nomeProduto = textProdCadNome.getText();
-				String precoProduto = textProdCadPreco.getText();
+		this.btnProdCadSalvar.addActionListener((ActionEvent e) -> {
+			String nomeProduto = textProdCadNome.getText();
+			String precoProduto = textProdCadPreco.getText();
 
-				if( !validaCampoTextoVazio(nomeProduto)){
-					JOptionPane.showMessageDialog(null, "O nome do produto é um campo obrigatório.");
-					return;
-				}
-				if( !validaCampoTextoVazio(precoProduto)){
-					JOptionPane.showMessageDialog(null, "O preco do produto é um campo obrigatório.");
-					return;
-				}
-				if( !validaPrecoProduto(Double.parseDouble(precoProduto))){
-					JOptionPane.showMessageDialog(null, "O preco do produto não pode ser negativo.");
-					return;
-				}
-				try {
-					Produto novoProduto = new Produto(nomeProduto, Double.parseDouble(precoProduto));
-					daoProduto.postProduto(novoProduto);
-					JOptionPane.showMessageDialog(null, "Produto " + novoProduto + " salvo com sucesso!");
-				}
-				catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
-					System.exit(1);
-				}
+			if( !Utils.validaCampoTextoVazio(nomeProduto)){
+				JOptionPane.showMessageDialog(null, "O nome do produto é um campo obrigatório.");
+				return;
+			}
+			if( !Utils.validaCampoTextoVazio(precoProduto)){
+				JOptionPane.showMessageDialog(null, "O preco do produto é um campo obrigatório.");
+				return;
+			}
+			if( !Utils.validaPrecoProduto(Double.parseDouble(precoProduto))){
+				JOptionPane.showMessageDialog(null, "O preco do produto não pode ser negativo.");
+				return;
+			}
+			try {
+				Produto novoProduto = new Produto(nomeProduto, Double.parseDouble(precoProduto));
+				daoProduto.postProduto(novoProduto);
+				JOptionPane.showMessageDialog(null, "Produto " + novoProduto + " salvo com sucesso!");
+			}
+			catch (Exception ex) {
+				JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
+				System.exit(1);
 			}
 		});
 		this.panelCadastrarProduto.add(this.btnProdCadSalvar);
@@ -222,44 +217,38 @@ public class IGProduto extends JDialog{
 		this.btnProdListLimpar.setText("Limpar");
 		this.btnProdListLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdListLimpar.setBounds(93, 167, 113, 42);
-		this.btnProdListLimpar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				textProdListNome.setText("");
-				textProdListCodigo.setText("");
-				textProdListPreco.setText("");
-			}
+		this.btnProdListLimpar.addActionListener((ActionEvent e) -> {
+			textProdListNome.setText("");
+			textProdListCodigo.setText("");
+			textProdListPreco.setText("");
 		});
 		this.panelListarProduto.add(this.btnProdListLimpar);
 
 		this.btnProdListPesquisar.setText("Pesquisar");
 		this.btnProdListPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnProdListPesquisar.setBounds(262, 167, 113, 42);
-		this.btnProdListPesquisar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String codigoProduto = textProdListCodigo.getText();
-				String nomeProduto = textProdListNome.getText();
-				String precoProduto = textProdListPreco.getText();
+		this.btnProdListPesquisar.addActionListener((ActionEvent e) -> {
+			String codigoProduto = textProdListCodigo.getText();
+			String nomeProduto = textProdListNome.getText();
+			String precoProduto = textProdListPreco.getText();
 
-				ProdutoFiltro produtoFiltro = new ProdutoFiltro();
+			ProdutoFiltro produtoFiltro = new ProdutoFiltro();
 
-				try {
-					if( validaCampoTextoVazio(codigoProduto)){
-						produtoFiltro.id = codigoProduto;
-					}
-
-					if( validaCampoTextoVazio(nomeProduto)){
-						produtoFiltro.nome = nomeProduto;
-					}
-					if( validaCampoTextoVazio(precoProduto)){
-						produtoFiltro.preco = precoProduto;
-					}
-					ArrayList<Produto> produtos = daoProduto.getProdutos(produtoFiltro);
-					tabelaDeProdutos(produtos);
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
+			try {
+				if( Utils.validaCampoTextoVazio(codigoProduto)){
+					produtoFiltro.id = codigoProduto;
 				}
+
+				if( Utils.validaCampoTextoVazio(nomeProduto)){
+					produtoFiltro.nome = nomeProduto;
+				}
+				if( Utils.validaCampoTextoVazio(precoProduto)){
+					produtoFiltro.preco = precoProduto;
+				}
+				ArrayList<Produto> produtos = daoProduto.getProdutos(produtoFiltro);
+				tabelaDeProdutos(produtos);
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
 			}
 		});
 		this.panelListarProduto.add(this.btnProdListPesquisar);
@@ -286,11 +275,9 @@ public class IGProduto extends JDialog{
 		this.tabbedPaneProduto.remove(this.scrollPane);
 		this.tabbedPaneProduto.addTab("Produtos", null, this.scrollPane, BorderLayout.CENTER);
 		this.tableProdutos.setModel(new AbstractTableModel() {
-			private ArrayList<Produto> produtos = new ArrayList<Produto>(resultado);
-
 			@Override
 			public int getRowCount() {
-				return produtos.size();
+				return resultado.size();
 			}
 			@Override
 			public int getColumnCount() {
@@ -298,7 +285,7 @@ public class IGProduto extends JDialog{
 			}
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				Produto p = produtos.get(rowIndex);
+				Produto p = resultado.get(rowIndex);
 				switch (columnIndex) {
 					case 0: return p.getId();
 					case 1: return p.getNome();
@@ -327,16 +314,5 @@ public class IGProduto extends JDialog{
 		});
 		this.tabbedPaneProduto.setSelectedComponent(this.scrollPane);
 	}
-	private static boolean validaPrecoProduto( Double precoProduto ){
-		if( precoProduto < 0 ){
-			return false;
-		}
-		return true;
-	}
-	private static boolean validaCampoTextoVazio( String texto){
-		if( texto.isEmpty() || texto.isBlank() ){
-			return false;
-		}
-		return true;
-	}
+
 }

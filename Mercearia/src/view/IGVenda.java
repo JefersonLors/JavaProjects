@@ -12,11 +12,11 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import java.util.ArrayList;
 
+import utils.Utils;
 
 public class IGVenda extends JDialog{
 
@@ -73,7 +73,6 @@ public class IGVenda extends JDialog{
 		instanciaComponentes();
 		initializeInterfaceGrafica();
 	}
-	
 	private void instanciaComponentes() {
 		// Componentes de JTabbedPane
 		this.tabbedPaneVenda = new JTabbedPane();
@@ -126,7 +125,6 @@ public class IGVenda extends JDialog{
 			ex.printStackTrace();
 		}
 	}
-
 	private void initializeInterfaceGrafica() {
 		this.setBounds(100, 100, 450, 300);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -186,48 +184,42 @@ public class IGVenda extends JDialog{
 		this.btnVendCadLimpar.setText("Limpar");
 		this.btnVendCadLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnVendCadLimpar.setBounds(72, 162, 113, 42);
-		this.btnVendCadLimpar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				comboBoxVendCadProdutos.setSelectedIndex(0);
-				spinnerVendCadQtd.setValue(0);
-			}
+		this.btnVendCadLimpar.addActionListener((ActionEvent e) -> {
+			comboBoxVendCadProdutos.setSelectedIndex(0);
+			spinnerVendCadQtd.setValue(0);
 		});
 		this.panelCadastrarVenda.add(this.btnVendCadLimpar);
 
 		this.btnVendCadSalvar.setText("Salvar");
 		this.btnVendCadSalvar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnVendCadSalvar.setBounds(241, 162, 113, 42);
-		this.btnVendCadSalvar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nomeProdutoVendido = comboBoxVendCadProdutos.getSelectedItem().toString();
-				long idProdutoVendido;
-				int qtd = Integer.parseInt(spinnerVendCadQtd.getValue().toString());
+		this.btnVendCadSalvar.addActionListener((ActionEvent e) -> {
+			String nomeProdutoVendido = comboBoxVendCadProdutos.getSelectedItem().toString();
+			long idProdutoVendido;
+			int qtd = Integer.parseInt(spinnerVendCadQtd.getValue().toString());
 
-				if( !validaCampoTextoVazio(nomeProdutoVendido)){
-					JOptionPane.showMessageDialog(null, "O campo de produto é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+			if( !Utils.validaCampoTextoVazio(nomeProdutoVendido)){
+				JOptionPane.showMessageDialog(null, "O campo de produto é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 
-				if( !validaQuantidadeProduto(qtd) ){
-					JOptionPane.showMessageDialog(null, "A quantidade de produtos precisa ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+			if( !Utils.validaQuantidadeProduto(qtd) ){
+				JOptionPane.showMessageDialog(null, "A quantidade de produtos precisa ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 
-				try{
-					for( Produto produto : produtoList){
-						if( produto.getNome().equals(nomeProdutoVendido)){
-							idProdutoVendido = produto.getId();
-							daoVenda.postVenda( new Venda(idProdutoVendido, qtd));
-							break;
-						}
+			try{
+				for( Produto produto : produtoList){
+					if( produto.getNome().equals(nomeProdutoVendido)){
+						idProdutoVendido = produto.getId();
+						daoVenda.postVenda( new Venda(idProdutoVendido, qtd));
+						break;
 					}
-					JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!!", "Confirmação",  JOptionPane.INFORMATION_MESSAGE);
-
-				} catch ( Exception ex ){
-					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 				}
+				JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!!", "Confirmação",  JOptionPane.INFORMATION_MESSAGE);
+
+			} catch ( Exception ex ){
+				JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		this.panelCadastrarVenda.add(this.btnVendCadSalvar);
@@ -277,42 +269,36 @@ public class IGVenda extends JDialog{
 		this.btnVendListLimpar.setText("Limpar");
 		this.btnVendListLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnVendListLimpar.setBounds(80, 167, 113, 42);
-		this.btnVendListLimpar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				comboBoxListVendProdutos.setSelectedIndex(0);
-				spinnerVendListQtd.setValue(0);
-				textVendListPreco.setText("");
-			}
+		this.btnVendListLimpar.addActionListener((ActionEvent e) -> {
+			comboBoxListVendProdutos.setSelectedIndex(0);
+			spinnerVendListQtd.setValue(0);
+			textVendListPreco.setText("");
 		});
 		this.panelListarVendas.add(this.btnVendListLimpar);
 
 		this.btnVendListPesquisar.setText("Pesquisar");
 		this.btnVendListPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnVendListPesquisar.setBounds(249, 167, 113, 42);
-		this.btnVendListPesquisar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String nomeProduto = comboBoxListVendProdutos.getSelectedItem().toString();
-				String codProduto = "";
-				String qtdProduto = spinnerVendListQtd.getValue().toString();
-				String precoProduto = textVendListPreco.getText().toString();
+		this.btnVendListPesquisar.addActionListener((ActionEvent e) -> {
+			String nomeProduto = comboBoxListVendProdutos.getSelectedItem().toString();
+			String codProduto = "";
+			String qtdProduto = spinnerVendListQtd.getValue().toString();
+			String precoProduto = textVendListPreco.getText().toString();
 
-				for( Produto produto : produtoList ){
-					if( produto.getNome().equals(nomeProduto)){
-						codProduto = produto.getId() + "";
-					}
+			for( Produto produto : produtoList ){
+				if( produto.getNome().equals(nomeProduto)){
+					codProduto = produto.getId() + "";
 				}
-
-				ArrayList<VendaJoinProduto> vendasList = null;
-
-				try{
-					vendasList = daoVenda.getVendas( new VendaFiltro( codProduto, qtdProduto.equals("0") ? "" : qtdProduto, precoProduto ));
-				}catch ( Exception ex ){
-					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-				}
-				tabelaDeProdutos( vendasList);
 			}
+
+			ArrayList<VendaJoinProduto> vendasList = null;
+
+			try{
+				vendasList = daoVenda.getVendas( new VendaFiltro( codProduto, qtdProduto.equals("0") ? "" : qtdProduto, precoProduto ));
+			}catch ( Exception ex ){
+				JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+			}
+			tabelaDeProdutos( vendasList);
 		});
 		this.panelListarVendas.add(this.btnVendListPesquisar);
 
@@ -371,23 +357,5 @@ public class IGVenda extends JDialog{
 		});
 
 		this.tabbedPaneVenda.setSelectedComponent(this.vendaScrollPane);
-	}
-	private static boolean validaQuantidadeProduto( int quantidade ){
-		if( quantidade < 1 ){
-			return false;
-		}
-		return true;
-	}
-	private static boolean validaCampoTextoVazio( String texto){
-		if( texto.isEmpty() || texto.isBlank() ){
-			return false;
-		}
-		return true;
-	}
-	private static boolean validaPrecoProduto( Double precoProduto ){
-		if( precoProduto < 0 ){
-			return false;
-		}
-		return true;
 	}
 }

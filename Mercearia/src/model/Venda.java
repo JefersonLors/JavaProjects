@@ -1,6 +1,7 @@
 package model;
 
 import exceptions.QuantidadeInvalidaException;
+import utils.Utils;
 
 public class Venda {
     private long id;
@@ -8,7 +9,7 @@ public class Venda {
     private long quantidade;
 
     public Venda( long id, long idProduto, long quantidade) throws QuantidadeInvalidaException {
-        if( this.validaQuantidadeMenorUm(quantidade))
+        if( Utils.validaQuantidadeMenorUm(quantidade))
             throw new QuantidadeInvalidaException("A quantidade de produto vendido não pode ser menor que 1");
         this.id = id;
         this.idProduto = idProduto;
@@ -16,7 +17,7 @@ public class Venda {
     }
 
     public Venda( long idProduto, long quantidade) throws QuantidadeInvalidaException {
-        if( this.validaQuantidadeMenorUm(quantidade))
+        if( Utils.validaQuantidadeMenorUm(quantidade))
             throw new QuantidadeInvalidaException("A quantidade de produto vendido não pode ser menor que 1");
         this.id = -1;
         this.idProduto = idProduto;
@@ -45,18 +46,12 @@ public class Venda {
     }
 
     public void setQuantidade(long quantidade) throws QuantidadeInvalidaException {
-        if( this.validaQuantidadeMenorUm(quantidade))
+        if( Utils.validaQuantidadeMenorUm(quantidade))
             throw new QuantidadeInvalidaException("A quantidade de produto vendido não pode ser menor que 1");
         this.quantidade = quantidade;
     }
 
-    private static boolean validaQuantidadeMenorUm( long quantidade )
-    {
-        if( quantidade < 1 ){
-            return true;
-        }
-        return false;
-    }
+
 
     public String toString(){
         return "[" + this.id + "] [" + this.idProduto + "] - " + this.quantidade;

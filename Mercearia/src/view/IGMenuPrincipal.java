@@ -9,7 +9,6 @@ import javax.swing.JButton;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class IGMenuPrincipal {
 
@@ -33,13 +32,11 @@ public class IGMenuPrincipal {
 	private IGVenda igVenda;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new IGMenuPrincipal();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				new IGMenuPrincipal();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -51,8 +48,6 @@ public class IGMenuPrincipal {
 	private void instanciaComponentes() {
 		// Elementos do tipo JFrame
 		this.frame = new JFrame();
-		this.igVenda = new IGVenda(this.frame);
-		this.igProduto = new IGProduto(this.frame);
 
 		// Elementos do tipo JButton
 		this.btnMenuVenda = new JButton();
@@ -83,24 +78,20 @@ public class IGMenuPrincipal {
 		this.btnMenuProduto.setText("Produto");
 		this.btnMenuProduto.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnMenuProduto.setBounds(147, 91, 126, 45);
-		this.btnMenuProduto.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				igProduto.setModal(true);
-				igProduto.setVisible(true);
-			}
+		this.btnMenuProduto.addActionListener( ( ActionListenere) -> {
+			this.igProduto = new IGProduto(this.frame);
+			this.igProduto.setModal(true);
+			this.igProduto.setVisible(true);
 		});
 		this.frame.getContentPane().add(this.btnMenuProduto);
 	
 		this.btnMenuVenda.setText("Venda");
 		this.btnMenuVenda.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnMenuVenda.setBounds(147, 167, 126, 45);
-		this.btnMenuVenda.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				igVenda.setModal(true);
-				igVenda.setVisible(true);
-			}
+		this.btnMenuVenda.addActionListener((ActionEvent e) -> {
+			this.igVenda = new IGVenda(this.frame);
+			this.igVenda.setModal(true);
+			this.igVenda.setVisible(true);
 		});
 		this.frame.getContentPane().add(this.btnMenuVenda);
 	}
