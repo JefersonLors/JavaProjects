@@ -3,11 +3,13 @@ package view;
 import dao.DaoProduto;
 import dao.DaoVenda;
 
+import dao.entities.VendaJoinProduto;
 import model.Produto;
 import model.Venda;
 import model.filtros.VendaFiltro;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -54,6 +56,12 @@ public class IGVenda extends JDialog{
 	// JSpinner
 	private JSpinner spinnerVendCadQtd;
 	private JSpinner spinnerVendListQtd;
+
+	// JTable
+
+	private JTable vendasTable;
+
+	private JScrollPane vendaScrollPane;
 
 	private DaoVenda daoVenda;
 
@@ -105,6 +113,10 @@ public class IGVenda extends JDialog{
 		this.textVendListPreco = new JTextField();
 
 		this.produtoList =  new ArrayList<Produto>();
+
+		this.vendasTable = new JTable();
+
+		this.vendaScrollPane = new JScrollPane(this.vendasTable);
 
 		// DaoVenda
 		try{
@@ -282,12 +294,20 @@ public class IGVenda extends JDialog{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String nomeProduto = comboBoxListVendProdutos.getSelectedItem().toString();
+				String codProduto = "";
 				String qtdProduto = spinnerVendListQtd.getValue().toString();
 				String precoProduto = textVendListPreco.getText().toString();
 
-				ArrayList<Venda> vendasList = null;
+				for( Produto produto : produtoList ){
+					if( produto.getNome().equals(nomeProduto)){
+						codProduto = produto.getId() + "";
+					}
+				}
+
+				ArrayList<VendaJoinProduto> vendasList = null;
+
 				try{
-					vendasList = daoVenda.getVendas( new VendaFiltro( nomeProduto, qtdProduto.equals("0") ? "" : qtdProduto, precoProduto ));
+					vendasList = daoVenda.getVendas( new VendaFiltro( codProduto, qtdProduto.equals("0") ? "" : qtdProduto, precoProduto ));
 				}catch ( Exception ex ){
 					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 				}
@@ -311,10 +331,46 @@ public class IGVenda extends JDialog{
 		this.textVendListPreco.setBounds(93, 120, 86, 20);
 		this.panelListarVendas.add(this.textVendListPreco);
 	}
-	private void tabelaDeProdutos( ArrayList<Venda> vendasList ){
-		for( Venda venda : vendasList ){
-			System.out.println(venda);
-		}
+	private void tabelaDeProdutos( ArrayList<VendaJoinProduto> vendasList ){
+		this.tabbedPaneVenda.remove(this.vendaScrollPane);
+		this.tabbedPaneVenda.add( "Vendas", this.vendaScrollPane);
+		this.vendasTable.setModel(new AbstractTableModel() {
+			@Override
+			public int getRowCount() {
+				return vendasList.size();
+			}
+
+			@Override
+			public int getColumnCount() {
+				return 5;
+			}
+			@Override
+			public String getColumnName( int column){
+				switch (column){
+					case 0 : return "IdVenda";
+					case 1 : return "Produto";
+					case 2 : return "Preço";
+					case 3 : return "Quantidade";
+					case 4 : return "Total";
+					default : return null;
+				}
+			}
+
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) {
+				VendaJoinProduto venda = vendasList.get(rowIndex);
+				switch (columnIndex){
+					case 0 : return venda.idVenda;
+					case 1 : return venda.nomeProduto;
+					case 2 : return venda.preco;
+					case 3 : return venda.quantidade;
+					case 4 : return venda.preco * venda.quantidade;
+					default : return null;
+				}
+			}
+		});
+
+		this.tabbedPaneVenda.setSelectedComponent(this.vendaScrollPane);
 	}
 	private static boolean validaQuantidadeProduto( int quantidade ){
 		if( quantidade < 1 ){

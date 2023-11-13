@@ -1,6 +1,7 @@
 package dao;
 
 import dao.Idao.IDaoVenda;
+import dao.entities.VendaJoinProduto;
 import exceptions.QuantidadeInvalidaException;
 import exceptions.VendaInexistenteException;
 import model.Venda;
@@ -21,43 +22,37 @@ public class DaoVenda implements IDaoVenda {
         this.conn = new PostgreSQLConnection().getConnection();
     }
     @Override
-    public ArrayList<Venda> getVendas() throws SQLException, QuantidadeInvalidaException {
-        String query = "SELECT * " +
-                       "FROM VENDAS;";
+    public ArrayList<VendaJoinProduto> getVendas() throws SQLException, QuantidadeInvalidaException {
+        String query = "SELECT V.id as codigoVenda, p.nome, p.preco, v.quantidade\n" +
+                "FROM VENDAS V LEFT JOIN PRODUTOS P\n" +
+                "\tON ( V.idProduto = P.id)\n ";
 
-        ArrayList<Venda> listaVendas = new ArrayList<Venda>();
+        ArrayList<VendaJoinProduto> listaVendas = new ArrayList<VendaJoinProduto>();
 
         this.pStatement = this.conn.prepareStatement(query);
         ResultSet resultSet = this.pStatement.executeQuery();
 
         while( resultSet.next() ){
-            listaVendas.add(new Venda(
+            listaVendas.add(new VendaJoinProduto(
                 resultSet.getLong(1),
-                    resultSet.getLong(2),
-                    resultSet.getLong(3)
+                resultSet.getString(2),
+                resultSet.getDouble(3),
+                resultSet.getLong(3)
             ));
         }
 
         return listaVendas;
     }
-    public ArrayList<Venda> getVendas(VendaFiltro filtro) throws SQLException, QuantidadeInvalidaException {
+    public ArrayList<VendaJoinProduto> getVendas(VendaFiltro filtro) throws SQLException, QuantidadeInvalidaException {
         if( filtro == null ){
             return getVendas();
         }
-        String query = "SELECT * " +
-                "FROM VENDAS ";
+        String query = "SELECT V.id as codigoVenda, p.nome, p.preco, V.quantidade " +
+                "FROM VENDAS V LEFT JOIN PRODUTOS P " +
+                "ON ( V.idProduto = P.id) ";
+
         boolean parametro = false;
 
-        if( filtro.id != null && !filtro.id.isBlank() && !filtro.id.isEmpty() ){
-            if( parametro ){
-                query += " AND ";
-            }else{
-                query += " WHERE ";
-            }
-
-            query += " id = " + filtro.id;
-            parametro = !parametro ? !parametro : parametro;
-        }
         if( filtro.idProduto != null && !filtro.idProduto.isBlank() && !filtro.idProduto.isEmpty() ){
             if( parametro ){
                 query += " AND ";
@@ -65,7 +60,7 @@ public class DaoVenda implements IDaoVenda {
                 query += " WHERE ";
             }
 
-            query += " idProduto = " + filtro.idProduto;
+            query += " v.idProduto = " + filtro.idProduto;
             parametro = !parametro ? !parametro : parametro;
         }
         if( filtro.quantidade != null && !filtro.quantidade.isBlank() && !filtro.quantidade.isEmpty() ){
@@ -75,21 +70,33 @@ public class DaoVenda implements IDaoVenda {
                 query += " WHERE ";
             }
 
-            query += " quantidade = " + filtro.quantidade;
+            query += " v.quantidade = " + filtro.quantidade;
             parametro = !parametro ? !parametro : parametro;
         }
-        query += "; ";
+        if( filtro.preco != null && !filtro.preco.isBlank() && !filtro.preco.isEmpty() ){
+            if( parametro ){
+                query += " AND ";
+            }else{
+                query += " WHERE ";
+            }
+
+            query += " p.preco = " + filtro.preco;
+            parametro = !parametro ? !parametro : parametro;
+        }
+
+        query += " ORDER BY codigovenda DESC;";
 
         this.pStatement = this.conn.prepareStatement(query);
         ResultSet resultSet = this.pStatement.executeQuery();
 
-        ArrayList<Venda> listaVendas = new ArrayList<Venda>();
+        ArrayList<VendaJoinProduto> listaVendas = new ArrayList<VendaJoinProduto>();
 
         while( resultSet.next() ){
-            listaVendas.add(new Venda(
-                    resultSet.getLong(1),
-                    resultSet.getLong(2),
-                    resultSet.getLong(3)
+            listaVendas.add(new VendaJoinProduto(
+                    resultSet.getLong("codigoVenda"),
+                    resultSet.getString("nome"),
+                    resultSet.getDouble("preco"),
+                    resultSet.getInt("quantidade")
             ));
         }
 
