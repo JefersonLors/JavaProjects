@@ -1,16 +1,18 @@
 package dao;
 
 import dao.Idao.IDaoProduto;
+import dao.fromDB.ProdutoFDB;
+
 import exceptions.NomeInvalidoException;
 import exceptions.PrecoInvalidoException;
 import exceptions.ProdutoInexistenteException;
+
 import model.Produto;
 import model.filtros.ProdutoFiltro;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class DaoProduto implements IDaoProduto {
     private Connection conn;
@@ -20,7 +22,7 @@ public class DaoProduto implements IDaoProduto {
     }
 
     @Override
-    public ArrayList<Produto> getProdutos()
+    public ArrayList<ProdutoFDB> getProdutos()
             throws SQLException, NomeInvalidoException, PrecoInvalidoException {
         String query = "SELECT * " +
                        "FROM produtos;";
@@ -28,10 +30,10 @@ public class DaoProduto implements IDaoProduto {
         this.pStatement = conn.prepareStatement(query);
         ResultSet resultSet = pStatement.executeQuery();
 
-        ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
+        ArrayList<ProdutoFDB> listaProdutos = new ArrayList<ProdutoFDB>();
 
         while( resultSet.next() ){
-            listaProdutos.add(new Produto(
+            listaProdutos.add(new ProdutoFDB(
                     resultSet.getLong(1),
                     resultSet.getString(2),
                     resultSet.getDouble(3)));
@@ -40,7 +42,7 @@ public class DaoProduto implements IDaoProduto {
     }
 
     @Override
-    public ArrayList<Produto> getProdutos(ProdutoFiltro produtoFiltro)
+    public ArrayList<ProdutoFDB> getProdutos(ProdutoFiltro produtoFiltro)
             throws SQLException, NomeInvalidoException, PrecoInvalidoException {
         if( produtoFiltro == null ) {
             return this.getProdutos();
@@ -57,10 +59,10 @@ public class DaoProduto implements IDaoProduto {
 
         ResultSet resultSet = pStatement.executeQuery();
 
-        ArrayList<Produto> listaProdutos = new ArrayList<Produto>();
+        ArrayList<ProdutoFDB> listaProdutos = new ArrayList<ProdutoFDB>();
 
         while( resultSet.next() ){
-            listaProdutos.add(new Produto(
+            listaProdutos.add(new ProdutoFDB(
                     resultSet.getLong(1),
                     resultSet.getString(2),
                     resultSet.getDouble(3)));
@@ -69,7 +71,7 @@ public class DaoProduto implements IDaoProduto {
     }
 
     @Override
-    public Produto getProdutoPorId(long id)
+    public ProdutoFDB getProdutoPorId(long id)
             throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException {
         String query = "SELECT * " +
                        "FROM produtos " +
@@ -82,26 +84,26 @@ public class DaoProduto implements IDaoProduto {
         if( !resultSet.next() )
             throw new ProdutoInexistenteException("O id "+ id + " não está associado a nenhum produto.");
 
-        return new Produto( resultSet.getInt("id"), resultSet.getString("nome"), resultSet.getDouble("preco"));
+        return new ProdutoFDB( resultSet.getInt("id"), resultSet.getString("nome"), resultSet.getDouble("preco"));
     }
 
     @Override
-    public Produto putProdutoPorId(Produto produtoAtualizado)
+    public ProdutoFDB putProduto(Produto produtoAtualizado)
             throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException {
         String query = "UPDATE Produtos SET " +
                             "nome = ?, " +
                             "preco = ? " +
                         "WHERE id = ?;";
 
-        Produto produtoBD = this.getProdutoPorId(produtoAtualizado.getId());
+        ProdutoFDB produtoFBD = this.getProdutoPorId(produtoAtualizado.getId());
 
         Produto produtoResultante = new Produto();
 
-        produtoResultante.setId(produtoBD.getId());
+        produtoResultante.setId(produtoFBD.id);
 
         String nomeProdutoAtulizado = produtoAtualizado.getNome();
 
-        produtoResultante.setNome( nomeProdutoAtulizado.isBlank() ? produtoBD.getNome() : nomeProdutoAtulizado);
+        produtoResultante.setNome( nomeProdutoAtulizado.isBlank() ? produtoFBD.nome : nomeProdutoAtulizado);
         produtoResultante.setPreco( produtoAtualizado.getPreco());
 
         this.pStatement = conn.prepareStatement(query);
@@ -110,11 +112,13 @@ public class DaoProduto implements IDaoProduto {
         this.pStatement.setLong(3, produtoResultante.getId());
         this.pStatement.executeUpdate();
 
-        return produtoResultante;
+        return new ProdutoFDB( produtoResultante.getId(),
+                               produtoResultante.getNome(),
+                               produtoResultante.getPreco() );
     }
 
     @Override
-    public Produto postProduto(Produto produtoNovo) throws SQLException {
+    public ProdutoFDB postProduto(Produto produtoNovo) throws SQLException {
         String query = "INSERT INTO Produtos (nome, preco) values (?, ?);";
 
         this.pStatement = conn.prepareStatement(query);
@@ -122,7 +126,7 @@ public class DaoProduto implements IDaoProduto {
         this.pStatement.setDouble(2, produtoNovo.getPreco());
         this.pStatement.executeUpdate();
 
-        return produtoNovo;
+        return new ProdutoFDB( -1, produtoNovo.getNome(), produtoNovo.getPreco() );
     }
 
     private String montaClausulaWhere( ProdutoFiltro filtro){

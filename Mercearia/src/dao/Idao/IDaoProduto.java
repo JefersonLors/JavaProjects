@@ -10,14 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
 
+import dao.fromDB.ProdutoFDB;
+
 public interface IDaoProduto {
-    ArrayList<Produto> getProdutos()
+    ArrayList<ProdutoFDB> getProdutos()
             throws SQLException, NomeInvalidoException, PrecoInvalidoException;
-    ArrayList<Produto> getProdutos(ProdutoFiltro produtoFiltro)
+    ArrayList<ProdutoFDB> getProdutos(ProdutoFiltro produtoFiltro)
             throws SQLException, NomeInvalidoException, PrecoInvalidoException;
-    Produto getProdutoPorId(long id)
+    ProdutoFDB getProdutoPorId(long id)
             throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException;
-    Produto putProdutoPorId(Produto produtoAtualizado)
+
+    ProdutoFDB putProduto(Produto produtoAtualizado)
             throws SQLException, ProdutoInexistenteException, NomeInvalidoException, PrecoInvalidoException;
-    Produto postProduto(Produto produtoNovo) throws SQLException;
+
+    ProdutoFDB postProduto(Produto produtoNovo) throws SQLException;
 }

@@ -1,5 +1,6 @@
 package dao.Idao;
-import dao.entities.VendaJoinProduto;
+import dao.fromDB.VendaFDB;
+import dao.fromDB.VendaJoinProdutoFDB;
 import exceptions.QuantidadeInvalidaException;
 import exceptions.VendaInexistenteException;
 import model.Venda;
@@ -9,9 +10,9 @@ import java.util.ArrayList;
 import java.sql.SQLException;
 
 public interface IDaoVenda {
-    public ArrayList<VendaJoinProduto> getVendas() throws SQLException, QuantidadeInvalidaException;
-    ArrayList<VendaJoinProduto> getVendas(VendaFiltro filtro)throws SQLException, QuantidadeInvalidaException;
-    Venda getVendaPorId(long id)
+    public ArrayList<VendaJoinProdutoFDB> getVendas() throws SQLException, QuantidadeInvalidaException;
+    ArrayList<VendaJoinProdutoFDB> getVendas(VendaFiltro filtro)throws SQLException, QuantidadeInvalidaException;
+    VendaFDB getVendaPorId(long id)
             throws SQLException, VendaInexistenteException, QuantidadeInvalidaException;
-    Venda postVenda(Venda novaVenda) throws SQLException;
+    VendaFDB postVenda(Venda novaVenda) throws SQLException;
 }

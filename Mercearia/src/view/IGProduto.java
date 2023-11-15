@@ -2,6 +2,7 @@ package view;
 
 import dao.DaoProduto;
 
+import dao.fromDB.ProdutoFDB;
 import model.Produto;
 import model.filtros.ProdutoFiltro;
 import utils.Utils;
@@ -245,7 +246,7 @@ public class IGProduto extends JDialog{
 				if( Utils.validaCampoTextoVazio(precoProduto)){
 					produtoFiltro.preco = precoProduto;
 				}
-				ArrayList<Produto> produtos = daoProduto.getProdutos(produtoFiltro);
+				ArrayList<ProdutoFDB> produtos = daoProduto.getProdutos(produtoFiltro);
 				tabelaDeProdutos(produtos);
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
@@ -271,7 +272,7 @@ public class IGProduto extends JDialog{
 		this.panelListarProduto.add(this.textProdListNome);
 		this.textProdListNome.setColumns(10);
 	}
-	private void tabelaDeProdutos( ArrayList<Produto> resultado ){
+	private void tabelaDeProdutos( ArrayList<ProdutoFDB> resultado ){
 		this.tabbedPaneProduto.remove(this.scrollPane);
 		this.tabbedPaneProduto.addTab("Produtos", null, this.scrollPane, BorderLayout.CENTER);
 		this.tableProdutos.setModel(new AbstractTableModel() {
@@ -285,11 +286,11 @@ public class IGProduto extends JDialog{
 			}
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				Produto p = resultado.get(rowIndex);
+				ProdutoFDB produto = resultado.get(rowIndex);
 				switch (columnIndex) {
-					case 0: return p.getId();
-					case 1: return p.getNome();
-					case 2: return p.getPreco();
+					case 0: return produto.id;
+					case 1: return produto.nome;
+					case 2: return produto.preco;
 					default: return null;
 				}
 			}

@@ -3,8 +3,8 @@ package view;
 import dao.DaoProduto;
 import dao.DaoVenda;
 
-import dao.entities.VendaJoinProduto;
-import model.Produto;
+import dao.fromDB.ProdutoFDB;
+import dao.fromDB.VendaJoinProdutoFDB;
 import model.Venda;
 import model.filtros.VendaFiltro;
 
@@ -57,17 +57,12 @@ public class IGVenda extends JDialog{
 	private JSpinner spinnerVendCadQtd;
 	private JSpinner spinnerVendListQtd;
 
-	// JTable
-
 	private JTable vendasTable;
-
 	private JScrollPane vendaScrollPane;
-
 	private DaoVenda daoVenda;
-
 	private DaoProduto daoProduto;
 
-	private ArrayList<Produto> produtoList;
+	private ArrayList<ProdutoFDB> produtoList;
 	public IGVenda( Frame owner) {
 		super(owner);
 		instanciaComponentes();
@@ -111,7 +106,7 @@ public class IGVenda extends JDialog{
 		// Componentes de JTextField
 		this.textVendListPreco = new JTextField();
 
-		this.produtoList =  new ArrayList<Produto>();
+		this.produtoList =  new ArrayList<ProdutoFDB>();
 
 		this.vendasTable = new JTable();
 
@@ -168,9 +163,7 @@ public class IGVenda extends JDialog{
 		}
 		this.comboBoxVendCadProdutos.addItem("");
 
-		for( Produto item : this.produtoList){
-			this.comboBoxVendCadProdutos.addItem(item.getNome());
-		}
+		this.produtoList.stream().forEach(produto -> this.comboBoxVendCadProdutos.addItem(produto.nome));
 
 		this.panelCadastrarVenda.add(this.comboBoxVendCadProdutos);
 
@@ -209,9 +202,9 @@ public class IGVenda extends JDialog{
 			}
 
 			try{
-				for( Produto produto : produtoList){
-					if( produto.getNome().equals(nomeProdutoVendido)){
-						idProdutoVendido = produto.getId();
+				for( ProdutoFDB produto : produtoList){
+					if( produto.nome.equals(nomeProdutoVendido)){
+						idProdutoVendido = produto.id;
 						daoVenda.postVenda( new Venda(idProdutoVendido, qtd));
 						break;
 					}
@@ -256,9 +249,7 @@ public class IGVenda extends JDialog{
 			this.produtoList = daoProduto.getProdutos();
 			this.comboBoxListVendProdutos.addItem("");
 
-			for( Produto produto : this.produtoList){
-				this.comboBoxListVendProdutos.addItem(produto.getNome());
-			}
+			this.produtoList.stream().forEach(produto -> this.comboBoxListVendProdutos.addItem(produto.nome));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -279,19 +270,20 @@ public class IGVenda extends JDialog{
 		this.btnVendListPesquisar.setText("Pesquisar");
 		this.btnVendListPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		this.btnVendListPesquisar.setBounds(249, 167, 113, 42);
-		this.btnVendListPesquisar.addActionListener((ActionEvent e) -> {
+		this.btnVendListPesquisar.addActionListener( (ActionEvent e) -> {
 			String nomeProduto = comboBoxListVendProdutos.getSelectedItem().toString();
 			String codProduto = "";
 			String qtdProduto = spinnerVendListQtd.getValue().toString();
 			String precoProduto = textVendListPreco.getText().toString();
 
-			for( Produto produto : produtoList ){
-				if( produto.getNome().equals(nomeProduto)){
-					codProduto = produto.getId() + "";
+			for( ProdutoFDB produto : produtoList ){
+				if( produto.nome.equals(nomeProduto)){
+					codProduto = produto.id + "";
+					break;
 				}
 			}
 
-			ArrayList<VendaJoinProduto> vendasList = null;
+			ArrayList<VendaJoinProdutoFDB> vendasList = null;
 
 			try{
 				vendasList = daoVenda.getVendas( new VendaFiltro( codProduto, qtdProduto.equals("0") ? "" : qtdProduto, precoProduto ));
@@ -317,7 +309,7 @@ public class IGVenda extends JDialog{
 		this.textVendListPreco.setBounds(93, 120, 86, 20);
 		this.panelListarVendas.add(this.textVendListPreco);
 	}
-	private void tabelaDeProdutos( ArrayList<VendaJoinProduto> vendasList ){
+	private void tabelaDeProdutos( ArrayList<VendaJoinProdutoFDB> vendasList ){
 		this.tabbedPaneVenda.remove(this.vendaScrollPane);
 		this.tabbedPaneVenda.add( "Vendas", this.vendaScrollPane);
 		this.vendasTable.setModel(new AbstractTableModel() {
@@ -344,7 +336,7 @@ public class IGVenda extends JDialog{
 
 			@Override
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				VendaJoinProduto venda = vendasList.get(rowIndex);
+				VendaJoinProdutoFDB venda = vendasList.get(rowIndex);
 				switch (columnIndex){
 					case 0 : return venda.idVenda;
 					case 1 : return venda.nomeProduto;
