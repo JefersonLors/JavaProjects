@@ -69,51 +69,51 @@ public class IGVenda extends JDialog{
 		initializeInterfaceGrafica();
 	}
 	private void instanciaComponentes() {
-		// Componentes de JTabbedPane
-		this.tabbedPaneVenda = new JTabbedPane();
-
-		// Componentes de JPanel
-		this.panelCadastrarVenda = new JPanel();
-		this.panelListarVendas = new JPanel();
-
-		// Componentes de JLabel
-		this.lblCadastrarVenda = new JLabel();
-		this.lblVendaCadProduto = new JLabel();
-		this.lblVendaQtd = new JLabel();
-		this.lblListarVenda = new JLabel();
-		this.lblVendaListQtd = new JLabel();
-		this.lblVendaListVenda = new JLabel();
-		this.lblVendaListPreco = new JLabel();
-
-		// Componentes de JSeparator
-		this.separatorProdCadastrar = new JSeparator();
-		this.separatorCadListar = new JSeparator();
-
-		// Componentes de JButton
-		this.btnVendCadLimpar = new JButton();
-		this.btnVendCadSalvar = new JButton();
-		this.btnVendListLimpar = new JButton();
-		this.btnVendListPesquisar = new JButton();
-
-		// Componentes de JComboBox
-		this.comboBoxVendCadProdutos = new JComboBox();
-		this.comboBoxListVendProdutos = new JComboBox();
-
-		// Componentes de JSpinner
-		this.spinnerVendCadQtd = new JSpinner();
-		this.spinnerVendListQtd = new JSpinner();
-
-		// Componentes de JTextField
-		this.textVendListPreco = new JTextField();
-
-		this.produtoList =  new ArrayList<ProdutoFDB>();
-
-		this.vendasTable = new JTable();
-
-		this.vendaScrollPane = new JScrollPane(this.vendasTable);
-
-		// DaoVenda
 		try{
+			// Componentes de JTabbedPane
+			this.tabbedPaneVenda = new JTabbedPane();
+
+			// Componentes de JPanel
+			this.panelCadastrarVenda = new JPanel();
+			this.panelListarVendas = new JPanel();
+
+			// Componentes de JLabel
+			this.lblCadastrarVenda = new JLabel();
+			this.lblVendaCadProduto = new JLabel();
+			this.lblVendaQtd = new JLabel();
+			this.lblListarVenda = new JLabel();
+			this.lblVendaListQtd = new JLabel();
+			this.lblVendaListVenda = new JLabel();
+			this.lblVendaListPreco = new JLabel();
+
+			// Componentes de JSeparator
+			this.separatorProdCadastrar = new JSeparator();
+			this.separatorCadListar = new JSeparator();
+
+			// Componentes de JButton
+			this.btnVendCadLimpar = new JButton();
+			this.btnVendCadSalvar = new JButton();
+			this.btnVendListLimpar = new JButton();
+			this.btnVendListPesquisar = new JButton();
+
+			// Componentes de JComboBox
+			this.comboBoxVendCadProdutos = new JComboBox();
+			this.comboBoxListVendProdutos = new JComboBox();
+
+			// Componentes de JSpinner
+			this.spinnerVendCadQtd = new JSpinner();
+			this.spinnerVendListQtd = new JSpinner();
+
+			// Componentes de JTextField
+			this.textVendListPreco = new JTextField();
+
+			this.produtoList =  new ArrayList<ProdutoFDB>();
+
+			this.vendasTable = new JTable();
+
+			this.vendaScrollPane = new JScrollPane(this.vendasTable);
+
+			// DaoVenda
 			this.daoVenda = new DaoVenda();
 			this.daoProduto = new DaoProduto();
 		}catch( Exception ex){
@@ -132,7 +132,7 @@ public class IGVenda extends JDialog{
 		this.panelListarProduto();
 	}
 	private void panelCadastrarProduto(){
-		try{
+		try {
 			this.tabbedPaneVenda.addTab("Cadastrar", null, this.panelCadastrarVenda, null);
 			this.panelCadastrarVenda.setLayout(null);
 
@@ -200,7 +200,7 @@ public class IGVenda extends JDialog{
 						return;
 					}
 
-					for( ProdutoFDB produto : produtoList) {
+					for( ProdutoFDB produto : produtoList ) {
 						if( produto.nome.equals(nomeProdutoVendido)){
 							idProdutoVendido = produto.id;
 							daoVenda.postVenda( new Venda(idProdutoVendido, qtd));
@@ -219,95 +219,92 @@ public class IGVenda extends JDialog{
 		}
 	}
 	private void panelListarProduto(){
-		this.tabbedPaneVenda.addTab("Listar", null, this.panelListarVendas, null);
-		this.panelListarVendas.setLayout(null);
-
-		this.lblListarVenda.setText("Venda - Listar");
-		this.lblListarVenda.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		this.lblListarVenda.setBounds(143, 16, 171, 25);
-		this.panelListarVendas.add(this.lblListarVenda);
-
-		this.separatorCadListar.setBounds(10, 52, 409, 2);
-		this.panelListarVendas.add(this.separatorCadListar);
-
-		this.spinnerVendListQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.spinnerVendListQtd.setBounds(333, 73, 71, 20);
-
-		SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel();
-		spinnerNumberModel.setMinimum(0);
-		this.spinnerVendListQtd.setModel(spinnerNumberModel);
-		this.panelListarVendas.add(this.spinnerVendListQtd);
-
-		this.lblVendaListQtd.setText("Quantidade");
-		this.lblVendaListQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.lblVendaListQtd.setBounds(238, 72, 85, 19);
-		this.panelListarVendas.add(this.lblVendaListQtd);
-
-		this.comboBoxListVendProdutos.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.comboBoxListVendProdutos.setBounds(80, 72, 137, 22);
-
 		try {
+			this.tabbedPaneVenda.addTab("Listar", null, this.panelListarVendas, null);
+			this.panelListarVendas.setLayout(null);
+
+			this.lblListarVenda.setText("Venda - Listar");
+			this.lblListarVenda.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			this.lblListarVenda.setBounds(143, 16, 171, 25);
+			this.panelListarVendas.add(this.lblListarVenda);
+
+			this.separatorCadListar.setBounds(10, 52, 409, 2);
+			this.panelListarVendas.add(this.separatorCadListar);
+
+			this.spinnerVendListQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.spinnerVendListQtd.setBounds(333, 73, 71, 20);
+
+			SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel();
+			spinnerNumberModel.setMinimum(0);
+			this.spinnerVendListQtd.setModel(spinnerNumberModel);
+			this.panelListarVendas.add(this.spinnerVendListQtd);
+
+			this.lblVendaListQtd.setText("Quantidade");
+			this.lblVendaListQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.lblVendaListQtd.setBounds(238, 72, 85, 19);
+			this.panelListarVendas.add(this.lblVendaListQtd);
+
+			this.comboBoxListVendProdutos.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.comboBoxListVendProdutos.setBounds(80, 72, 137, 22);
+
 			this.produtoList = daoProduto.getProdutos();
 			this.comboBoxListVendProdutos.addItem("");
 			this.produtoList.stream().forEach(produto -> this.comboBoxListVendProdutos.addItem(produto.nome));
 
+			this.panelListarVendas.add(this.comboBoxListVendProdutos);
+
+			this.btnVendListLimpar.setText("Limpar");
+			this.btnVendListLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.btnVendListLimpar.setBounds(80, 167, 113, 42);
+			this.btnVendListLimpar.addActionListener((ActionEvent e) -> {
+				comboBoxListVendProdutos.setSelectedIndex(0);
+				spinnerVendListQtd.setValue(0);
+				textVendListPreco.setText("");
+			});
+			this.panelListarVendas.add(this.btnVendListLimpar);
+
+			this.btnVendListPesquisar.setText("Pesquisar");
+			this.btnVendListPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.btnVendListPesquisar.setBounds(249, 167, 113, 42);
+			this.btnVendListPesquisar.addActionListener( (ActionEvent e) -> {
+				try {
+					String nomeProduto = comboBoxListVendProdutos.getSelectedItem().toString();
+					String codProduto = "";
+					String qtdProduto = spinnerVendListQtd.getValue().toString();
+					String precoProduto = textVendListPreco.getText().toString();
+
+					for( ProdutoFDB produto : produtoList ){
+						if( produto.nome.equals(nomeProduto)){
+							codProduto = produto.id + "";
+							break;
+						}
+					}
+					ArrayList<VendaJoinProdutoFDB> vendasList = null;
+					vendasList = daoVenda.getVendas( new VendaFiltro( codProduto, qtdProduto.equals("0") ? "" : qtdProduto, precoProduto ));
+					tabelaDeProdutos( vendasList);
+				}catch ( Exception ex ){
+					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+			this.panelListarVendas.add(this.btnVendListPesquisar);
+
+			this.lblVendaListVenda.setText("Produto");
+			this.lblVendaListVenda.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.lblVendaListVenda.setBounds(20, 72, 59, 19);
+			this.panelListarVendas.add(this.lblVendaListVenda);
+
+			this.lblVendaListPreco.setText("Preço R$");
+			this.lblVendaListPreco.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.lblVendaListPreco.setBounds(20, 119, 59, 19);
+			this.panelListarVendas.add(this.lblVendaListPreco);
+
+			this.textVendListPreco.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.textVendListPreco.setColumns(10);
+			this.textVendListPreco.setBounds(93, 120, 86, 20);
+			this.panelListarVendas.add(this.textVendListPreco);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-		this.panelListarVendas.add(this.comboBoxListVendProdutos);
-
-		this.btnVendListLimpar.setText("Limpar");
-		this.btnVendListLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.btnVendListLimpar.setBounds(80, 167, 113, 42);
-		this.btnVendListLimpar.addActionListener((ActionEvent e) -> {
-			comboBoxListVendProdutos.setSelectedIndex(0);
-			spinnerVendListQtd.setValue(0);
-			textVendListPreco.setText("");
-		});
-		this.panelListarVendas.add(this.btnVendListLimpar);
-
-		this.btnVendListPesquisar.setText("Pesquisar");
-		this.btnVendListPesquisar.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.btnVendListPesquisar.setBounds(249, 167, 113, 42);
-		this.btnVendListPesquisar.addActionListener( (ActionEvent e) -> {
-			String nomeProduto = comboBoxListVendProdutos.getSelectedItem().toString();
-			String codProduto = "";
-			String qtdProduto = spinnerVendListQtd.getValue().toString();
-			String precoProduto = textVendListPreco.getText().toString();
-
-			for( ProdutoFDB produto : produtoList ){
-				if( produto.nome.equals(nomeProduto)){
-					codProduto = produto.id + "";
-					break;
-				}
-			}
-
-			ArrayList<VendaJoinProdutoFDB> vendasList = null;
-
-			try{
-				vendasList = daoVenda.getVendas( new VendaFiltro( codProduto, qtdProduto.equals("0") ? "" : qtdProduto, precoProduto ));
-			}catch ( Exception ex ){
-				JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-			}
-			tabelaDeProdutos( vendasList);
-		});
-		this.panelListarVendas.add(this.btnVendListPesquisar);
-
-		this.lblVendaListVenda.setText("Produto");
-		this.lblVendaListVenda.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.lblVendaListVenda.setBounds(20, 72, 59, 19);
-		this.panelListarVendas.add(this.lblVendaListVenda);
-
-		this.lblVendaListPreco.setText("Preço R$");
-		this.lblVendaListPreco.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.lblVendaListPreco.setBounds(20, 119, 59, 19);
-		this.panelListarVendas.add(this.lblVendaListPreco);
-
-		this.textVendListPreco.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.textVendListPreco.setColumns(10);
-		this.textVendListPreco.setBounds(93, 120, 86, 20);
-		this.panelListarVendas.add(this.textVendListPreco);
 	}
 	private void tabelaDeProdutos( ArrayList<VendaJoinProdutoFDB> vendasList ){
 		this.tabbedPaneVenda.remove(this.vendaScrollPane);

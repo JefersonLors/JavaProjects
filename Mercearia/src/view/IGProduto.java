@@ -191,12 +191,12 @@ public class IGProduto extends JDialog {
 					this.btnProdCadLimpar.doClick();
 				}
 				catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
+					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			this.panelCadastrarProduto.add(this.btnProdCadSalvar);
 		}catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
+			JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	private void panelListarProduto(){
@@ -255,7 +255,7 @@ public class IGProduto extends JDialog {
 					ArrayList<ProdutoFDB> produtos = daoProduto.getProdutos(produtoFiltro);
 					tabelaDeProdutos(produtos);
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
+					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 				}
 			});
 			this.panelListarProduto.add(this.btnProdListPesquisar);
@@ -278,7 +278,7 @@ public class IGProduto extends JDialog {
 			this.panelListarProduto.add(this.textProdListNome);
 			this.textProdListNome.setColumns(10);
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage());
+			JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	private void tabelaDeProdutos( ArrayList<ProdutoFDB> resultado ){

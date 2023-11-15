@@ -139,7 +139,7 @@ public class DaoProduto implements IDaoProduto {
             } else {
                 query += " AND ";
             }
-            query += "unaccent(lower(nome)) like " + "'%" + filtro.nome.toLowerCase() + "%' ";
+            query += "unaccent(lower(nome)) like " + "'" + filtro.nome.toLowerCase() + "%' ";
             qtdParam++;
         }
         if( filtro.preco != null && !filtro.preco.toString().isBlank() && !filtro.preco.toString().isEmpty() ){
