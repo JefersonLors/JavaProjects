@@ -139,7 +139,7 @@ public class DaoProduto implements IDaoProduto {
             } else {
                 query += " AND ";
             }
-            query += "nome like " + "'%" + filtro.nome + "%' ";
+            query += "unaccent(lower(nome)) like " + "'%" + filtro.nome.toLowerCase() + "%' ";
             qtdParam++;
         }
         if( filtro.preco != null && !filtro.preco.toString().isBlank() && !filtro.preco.toString().isEmpty() ){
@@ -148,7 +148,7 @@ public class DaoProduto implements IDaoProduto {
             } else {
                 query += " AND ";
             }
-            query += "UPPER(preco) = " + filtro.preco.toUpperCase() + " ";
+            query += "preco = " + filtro.preco + " ";
             qtdParam++;
         }
 
@@ -161,6 +161,7 @@ public class DaoProduto implements IDaoProduto {
             query += "id = " + filtro.id + " ";
             qtdParam++;
         }
+
         return query;
     }
 }

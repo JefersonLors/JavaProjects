@@ -132,90 +132,91 @@ public class IGVenda extends JDialog{
 		this.panelListarProduto();
 	}
 	private void panelCadastrarProduto(){
-		this.tabbedPaneVenda.addTab("Cadastrar", null, this.panelCadastrarVenda, null);
-		this.panelCadastrarVenda.setLayout(null);
+		try{
+			this.tabbedPaneVenda.addTab("Cadastrar", null, this.panelCadastrarVenda, null);
+			this.panelCadastrarVenda.setLayout(null);
 
-		this.lblCadastrarVenda.setText("Venda - Cadastrar");
-		this.lblCadastrarVenda.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		this.lblCadastrarVenda.setBounds(126, 11, 179, 30);
-		this.panelCadastrarVenda.add(this.lblCadastrarVenda);
+			this.lblCadastrarVenda.setText("Venda - Cadastrar");
+			this.lblCadastrarVenda.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			this.lblCadastrarVenda.setBounds(126, 11, 179, 30);
+			this.panelCadastrarVenda.add(this.lblCadastrarVenda);
 
-		this.separatorProdCadastrar.setBounds(10, 52, 409, 2);
-		this.panelCadastrarVenda.add(this.separatorProdCadastrar);
+			this.separatorProdCadastrar.setBounds(10, 52, 409, 2);
+			this.panelCadastrarVenda.add(this.separatorProdCadastrar);
 
-		this.lblVendaCadProduto.setText("Produto");
-		this.lblVendaCadProduto.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.lblVendaCadProduto.setBounds(20, 76, 59, 19);
-		this.panelCadastrarVenda.add(this.lblVendaCadProduto);
+			this.lblVendaCadProduto.setText("Produto");
+			this.lblVendaCadProduto.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.lblVendaCadProduto.setBounds(20, 76, 59, 19);
+			this.panelCadastrarVenda.add(this.lblVendaCadProduto);
 
-		this.lblVendaQtd.setText("Quantidade");
-		this.lblVendaQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.lblVendaQtd.setBounds(238, 76, 85, 19);
-		this.panelCadastrarVenda.add(this.lblVendaQtd);
+			this.lblVendaQtd.setText("Quantidade");
+			this.lblVendaQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.lblVendaQtd.setBounds(238, 76, 85, 19);
+			this.panelCadastrarVenda.add(this.lblVendaQtd);
 
-		this.comboBoxVendCadProdutos.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.comboBoxVendCadProdutos.setBounds(80, 76, 137, 22);
+			this.comboBoxVendCadProdutos.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.comboBoxVendCadProdutos.setBounds(80, 76, 137, 22);
 
-		try {
 			this.produtoList = this.daoProduto.getProdutos();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		this.comboBoxVendCadProdutos.addItem("");
 
-		this.produtoList.stream().forEach(produto -> this.comboBoxVendCadProdutos.addItem(produto.nome));
+			this.comboBoxVendCadProdutos.addItem("");
 
-		this.panelCadastrarVenda.add(this.comboBoxVendCadProdutos);
+			this.produtoList.stream().forEach(produto -> this.comboBoxVendCadProdutos.addItem(produto.nome));
 
-		this.spinnerVendCadQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel();
-		spinnerNumberModel.setMinimum(0);
-		this.spinnerVendCadQtd.setModel(spinnerNumberModel);
-		this.spinnerVendCadQtd.setBounds(333, 77, 71, 20);
-		this.panelCadastrarVenda.add(this.spinnerVendCadQtd);
+			this.panelCadastrarVenda.add(this.comboBoxVendCadProdutos);
 
-		this.btnVendCadLimpar.setText("Limpar");
-		this.btnVendCadLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.btnVendCadLimpar.setBounds(72, 162, 113, 42);
-		this.btnVendCadLimpar.addActionListener((ActionEvent e) -> {
-			comboBoxVendCadProdutos.setSelectedIndex(0);
-			spinnerVendCadQtd.setValue(0);
-		});
-		this.panelCadastrarVenda.add(this.btnVendCadLimpar);
+			this.spinnerVendCadQtd.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel();
+			spinnerNumberModel.setMinimum(0);
+			this.spinnerVendCadQtd.setModel(spinnerNumberModel);
+			this.spinnerVendCadQtd.setBounds(333, 77, 71, 20);
+			this.panelCadastrarVenda.add(this.spinnerVendCadQtd);
 
-		this.btnVendCadSalvar.setText("Salvar");
-		this.btnVendCadSalvar.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		this.btnVendCadSalvar.setBounds(241, 162, 113, 42);
-		this.btnVendCadSalvar.addActionListener((ActionEvent e) -> {
-			String nomeProdutoVendido = comboBoxVendCadProdutos.getSelectedItem().toString();
-			long idProdutoVendido;
-			int qtd = Integer.parseInt(spinnerVendCadQtd.getValue().toString());
+			this.btnVendCadLimpar.setText("Limpar");
+			this.btnVendCadLimpar.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.btnVendCadLimpar.setBounds(72, 162, 113, 42);
+			this.btnVendCadLimpar.addActionListener((ActionEvent e) -> {
+				comboBoxVendCadProdutos.setSelectedIndex(0);
+				spinnerVendCadQtd.setValue(0);
+			});
+			this.panelCadastrarVenda.add(this.btnVendCadLimpar);
 
-			if( !Utils.validaCampoTextoVazio(nomeProdutoVendido)){
-				JOptionPane.showMessageDialog(null, "O campo de produto é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
+			this.btnVendCadSalvar.setText("Salvar");
+			this.btnVendCadSalvar.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			this.btnVendCadSalvar.setBounds(241, 162, 113, 42);
+			this.btnVendCadSalvar.addActionListener((ActionEvent e) -> {
+				try{
+					String nomeProdutoVendido = comboBoxVendCadProdutos.getSelectedItem().toString();
+					long idProdutoVendido;
+					int qtd = Integer.parseInt(spinnerVendCadQtd.getValue().toString());
 
-			if( !Utils.validaQuantidadeProduto(qtd) ){
-				JOptionPane.showMessageDialog(null, "A quantidade de produtos precisa ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			try{
-				for( ProdutoFDB produto : produtoList){
-					if( produto.nome.equals(nomeProdutoVendido)){
-						idProdutoVendido = produto.id;
-						daoVenda.postVenda( new Venda(idProdutoVendido, qtd));
-						break;
+					if( !Utils.validaCampoTextoVazio(nomeProdutoVendido)) {
+						JOptionPane.showMessageDialog(null, "O campo de produto é obrigatório.", "Erro", JOptionPane.ERROR_MESSAGE);
+						return;
 					}
-				}
-				JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!!", "Confirmação",  JOptionPane.INFORMATION_MESSAGE);
 
-			} catch ( Exception ex ){
-				JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-			}
-		});
-		this.panelCadastrarVenda.add(this.btnVendCadSalvar);
+					if( !Utils.validaQuantidadeProduto(qtd) ) {
+						JOptionPane.showMessageDialog(null, "A quantidade de produtos precisa ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+
+					for( ProdutoFDB produto : produtoList) {
+						if( produto.nome.equals(nomeProdutoVendido)){
+							idProdutoVendido = produto.id;
+							daoVenda.postVenda( new Venda(idProdutoVendido, qtd));
+							break;
+						}
+					}
+					JOptionPane.showMessageDialog(null, "Venda realizada com sucesso", "Confirmação",  JOptionPane.INFORMATION_MESSAGE);
+					this.btnVendCadLimpar.doClick();
+				} catch ( Exception ex ) {
+					JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+			this.panelCadastrarVenda.add(this.btnVendCadSalvar);
+		}catch ( Exception ex ) {
+			JOptionPane.showMessageDialog(null, "Exceção: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	private void panelListarProduto(){
 		this.tabbedPaneVenda.addTab("Listar", null, this.panelListarVendas, null);
@@ -248,7 +249,6 @@ public class IGVenda extends JDialog{
 		try {
 			this.produtoList = daoProduto.getProdutos();
 			this.comboBoxListVendProdutos.addItem("");
-
 			this.produtoList.stream().forEach(produto -> this.comboBoxListVendProdutos.addItem(produto.nome));
 
 		} catch (Exception ex) {
@@ -324,7 +324,7 @@ public class IGVenda extends JDialog{
 			}
 			@Override
 			public String getColumnName( int column){
-				switch (column){
+				switch (column) {
 					case 0 : return "IdVenda";
 					case 1 : return "Produto";
 					case 2 : return "Preço";
