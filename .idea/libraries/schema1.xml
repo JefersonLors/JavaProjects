@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="schema1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/CadastroBasico/src/.idea/dataSources/e6109a50-eb66-4e06-b2cd-93fbb4db843d/storage_v2/_src_/database/CadastroBasico.uvcDfQ/schema/information_schema.FNRwLQ.zip!/" />
+      <root url="jar://$PROJECT_DIR$/CadastroBasico/src/.idea/dataSources/e6109a50-eb66-4e06-b2cd-93fbb4db843d/storage_v2/_src_/database/CadastroBasico.uvcDfQ/schema/pg_catalog.0S1ZNQ.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

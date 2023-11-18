@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CadastroBasico/CadastroBasico.iml" filepath="$PROJECT_DIR$/CadastroBasico/CadastroBasico.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/JavaProjects.iml" filepath="$PROJECT_DIR$/.idea/JavaProjects.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mercearia/Mercearia.iml" filepath="$PROJECT_DIR$/Mercearia/Mercearia.iml" />
+    </modules>
+  </component>
+</project>
