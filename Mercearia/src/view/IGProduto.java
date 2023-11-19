@@ -125,7 +125,7 @@ public class IGProduto extends JDialog {
 		panelListarProduto();
 	}
 	private void panelCadastrarProduto(){
-		try{
+		try {
 			this.tabbedPaneProduto.addTab("Cadastrar", null, this.panelCadastrarProduto, null);
 			this.panelCadastrarProduto.setLayout(null);
 
