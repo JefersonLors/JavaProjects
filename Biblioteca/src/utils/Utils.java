@@ -1,9 +1,15 @@
 package utils;
-import dao.DaoEditora;
 import dao.idao.IDaoEditora;
+import dao.idao.IDaoAutor;
+import dao.idao.IDaoEditora;
+import dao.idao.IDaoLivro;
+import dao.idao.IDaoLivroAutor;
 
 public class Utils {
-    private static IDaoEditora daoEditora;
+    private static IDaoEditora iDaoEditora;
+    private static IDaoLivro iDaoLivro;
+    private static IDaoAutor iDaoAutor;
+    private static IDaoLivroAutor iDaoLivroAutor;
     public static boolean validaStringVazia( String string ){
         if( string == null || string.isBlank() )
             return true;
@@ -23,7 +29,7 @@ public class Utils {
         return true;
     }
     public static boolean validaCodigoEditora( int codEditora ){
-        //var editora = daoEditora.postEditora();
+        //var editora = iDaoEditora.postEditora();
 
         return true;
     }

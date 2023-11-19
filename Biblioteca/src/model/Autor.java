@@ -17,9 +17,9 @@ public class Autor {
             throws NomeInvalidoException, SexoInvalidoExeception, DataNascimentoInvalidoException {
         if(Utils.validaStringVazia(nome))
             throw new NomeInvalidoException("O nome não pode estar vazio.");
-        if( Utils.validaSexo(sexo))
+        if(!Utils.validaSexo(sexo))
             throw new SexoInvalidoExeception("Sexo inválido. Insira M (masculino) ou F (feminino).");
-        if( Utils.validaStringVazia(dataNascimento.toString()))
+        if(Utils.validaStringVazia(dataNascimento.toString()))
             throw new DataNascimentoInvalidoException("A data de nascimento é um campo obrigatório.");
 
         this.codAutor = codAutor;
@@ -29,7 +29,7 @@ public class Autor {
     }
     public Autor ( String nome, String sexo, Date dataNascimento )
             throws NomeInvalidoException, SexoInvalidoExeception, DataNascimentoInvalidoException {
-        new Autor( -1, nome, sexo, dataNascimento);
+        this( -1, nome, sexo, dataNascimento);
     }
 
     public int getCodAutor() {

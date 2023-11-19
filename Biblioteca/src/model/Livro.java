@@ -33,7 +33,7 @@ public class Livro {
     }
     public Livro(int isbn, String titulo, int numEdicao, double preco, int codEditora)
             throws TituloInvalidoException, PrecoInvalidoException, CodigoEditoraInvalidoException {
-        new Livro(-1, isbn, titulo, numEdicao, preco, codEditora);
+        this(-1, isbn, titulo, numEdicao, preco, codEditora);
     }
 
     public int getCodLivro() {

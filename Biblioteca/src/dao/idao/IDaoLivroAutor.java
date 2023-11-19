@@ -1,12 +1,19 @@
 package dao.idao;
 
+import dao.filter.AutorFiltro;
+import dao.filter.LivroAutorFiltro;
+import dao.fromDB.AutorFromDB;
+import dao.fromDB.LivroAutorFromDB;
+import model.Autor;
+import model.LivroAutor;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface IDaoLivroAutor {
-    Class<?> postLivroAutor(Class<?> livroAutorNovo) throws SQLException;
-    Class<?> putLivroAutor(Class<?> livroAutorAtualizado) throws SQLException;
-    Class<?> deleteLivroAutor(Class<?> livroAutorDeletado) throws SQLException;
-    ArrayList<?> getLivroAutor(Class<?> livroAutorFiltro) throws SQLException;
-    ArrayList<?> getLivroAutor( ) throws SQLException;
+    void postLivroAutor(LivroAutor livroAutorNovo) throws SQLException;
+    void putLivroAutor(LivroAutor livroAutorAtualizado) throws SQLException;
+    void deleteLivroAutor(LivroAutor livroAutorDeletado) throws SQLException;
+    ArrayList<LivroAutorFromDB> getLivroAutor(LivroAutorFiltro livroAutorFiltro) throws SQLException;
+    ArrayList<LivroAutorFromDB> getLivroAutor( ) throws SQLException;
 }

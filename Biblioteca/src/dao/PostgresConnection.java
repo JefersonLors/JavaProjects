@@ -13,7 +13,8 @@ public class PostgresConnection {
     public PostgresConnection() throws SQLException {
         conn = DriverManager.getConnection(url, user, password);
     }
-    public static Connection getConnection(){
-        return conn;
+    public static Connection getConnection() throws SQLException {
+        PostgresConnection pc = new PostgresConnection();
+        return pc.conn;
     }
 }

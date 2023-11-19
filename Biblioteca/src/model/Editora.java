@@ -19,7 +19,7 @@ public class Editora {
     }
     public Editora( String descricao, String endereco )
             throws DescricaoInvalidaException{
-        new Editora( -1, descricao, endereco);
+        this( -1, descricao, endereco);
     }
 
     public int getCodEditora() {
