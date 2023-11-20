@@ -119,7 +119,8 @@ public class DaoAutor implements IDaoAutor {
     }
 
     @Override
-    public ArrayList<AutorFromDB> getAutor() throws SQLException {
+    public ArrayList<AutorFromDB> getAutor()
+            throws SQLException {
         String query = "SELECT * " +
                         "FROM autor;";
 
