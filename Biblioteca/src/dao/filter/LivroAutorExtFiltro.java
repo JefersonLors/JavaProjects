@@ -7,6 +7,7 @@ public class LivroAutorExtFiltro {
     public String numEdicao;
     public String preco;
     public String codEditora;
+    public String descricao;
     public String codAutor;
     public String nomeAutor;
     public String sexoAutor;
@@ -14,13 +15,14 @@ public class LivroAutorExtFiltro {
     public LivroAutorExtFiltro() {
     }
 
-    public LivroAutorExtFiltro(String codLivro, String isbn, String titulo, String numEdicao, String preco, String codEditora, String codAutor, String nomeAutor, String sexoAutor) {
+    public LivroAutorExtFiltro(String codLivro, String isbn, String titulo, String numEdicao, String preco, String codEditora, String descricao, String codAutor, String nomeAutor, String sexoAutor) {
         this.codLivro = codLivro;
         this.isbn = isbn;
         this.titulo = titulo;
         this.numEdicao = numEdicao;
         this.preco = preco;
         this.codEditora = codEditora;
+        this.descricao = descricao;
         this.codAutor = codAutor;
         this.nomeAutor = nomeAutor;
         this.sexoAutor = sexoAutor;

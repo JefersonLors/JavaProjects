@@ -41,33 +41,12 @@ public class DaoLivroAutor implements IDaoLivroAutor {
         if( livrosFromDB.size() == 0 )
             throw new LivroInvalidoException("O livro não existe nas relações do banco de dados.");
 
-        String query = "INSERT INTO autor (cod_livro, cod_autor) "+
+        String query = "INSERT INTO livro_autor (cod_livro, cod_autor) "+
                        "values (?, ?);";
 
         PreparedStatement ps = this.conn.prepareStatement(query);
-        ps.setInt( 1, livroAutorNovo.getCodAutor());
-        ps.setInt(2, livroAutorNovo.getCodLivro());
-        ps.executeUpdate();
-    }
-
-    @Override
-    public void putLivroAutor(LivroAutor livroAutorAtualizado) throws SQLException, AutorInvalidoException, LivroInvalidoException {
-        ArrayList<AutorFromDB> autoresFromDB = iDaoAutor.getAutor(new AutorFiltro(  livroAutorAtualizado.getCodAutor() + "", "", "", ""));
-        ArrayList<LivroFromDB> livrosFromDB = iDaoLivro.getLivro(new LivroFiltro( livroAutorAtualizado.getCodLivro() + "", "", "", "", "", ""));
-
-        if( autoresFromDB.size() == 0 )
-            throw new AutorInvalidoException("O autor não existe nas relações do banco de dados.");
-
-        if( livrosFromDB.size() == 0 )
-            throw new LivroInvalidoException("O livro não existe nas relações do banco de dados.");
-
-        String query = "UPDATE autor SET "+
-                        "cod_autor = ?, " +
-                        "cod_livro = ?;";
-
-        PreparedStatement ps = this.conn.prepareStatement(query);
-        ps.setInt( 1, livroAutorAtualizado.getCodAutor());
-        ps.setInt(2, livroAutorAtualizado.getCodLivro());
+        ps.setInt( 1, livroAutorNovo.getCodLivro());
+        ps.setInt(2, livroAutorNovo.getCodAutor());
         ps.executeUpdate();
     }
 
@@ -81,8 +60,8 @@ public class DaoLivroAutor implements IDaoLivroAutor {
             throw new LivroAutorInvalidoException("Esse livro não possui autores cadastrado.");
         }
 
-        String query = "DELETE FROM livroautor " +
-                       "WHERE cod_livro = ? AND" +
+        String query = "DELETE FROM livro_autor " +
+                       "WHERE cod_livro = ? AND " +
                        "cod_autor = ?;";
 
         PreparedStatement ps = this.conn.prepareStatement(query);
@@ -100,7 +79,7 @@ public class DaoLivroAutor implements IDaoLivroAutor {
         boolean parametro = false;
 
         String query = "SELECT * " +
-                        "FROM livroAutor ";
+                        "FROM livro_autor ";
 
         if( livroAutorFiltro.codAutor != null && !livroAutorFiltro.codAutor.isBlank()){
             query += !parametro ? " WHERE " : " AND ";
@@ -109,7 +88,7 @@ public class DaoLivroAutor implements IDaoLivroAutor {
         }
         if( livroAutorFiltro.codLivro != null && !livroAutorFiltro.codLivro.isBlank()){
             query += !parametro ? " WHERE " : " AND ";
-            query += "cod_livro = " + livroAutorFiltro.codLivro.toUpperCase();
+            query += "cod_livro = " + livroAutorFiltro.codLivro;
             parametro = ( parametro ? parametro : !parametro);
         }
 
@@ -119,7 +98,7 @@ public class DaoLivroAutor implements IDaoLivroAutor {
 
         while(rs.next()){
             resultado.add( new LivroAutorFromDB(
-                    rs.getInt("cod_autor"),
+                    rs.getInt("cod_livro"),
                     rs.getInt("cod_autor")));
         }
         return resultado;
@@ -128,7 +107,7 @@ public class DaoLivroAutor implements IDaoLivroAutor {
     @Override
     public ArrayList<LivroAutorFromDB> getLivroAutor() throws SQLException {
         String query = "SELECT * " +
-                "FROM livroautor;";
+                "FROM livro_autor;";
 
         PreparedStatement ps = this.conn.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
@@ -136,7 +115,7 @@ public class DaoLivroAutor implements IDaoLivroAutor {
 
         while(rs.next()){
             resultado.add( new LivroAutorFromDB(
-                    rs.getInt("cod_autor"),
+                    rs.getInt("cod_livro"),
                     rs.getInt("cod_autor")));
         }
         return resultado;
@@ -144,11 +123,12 @@ public class DaoLivroAutor implements IDaoLivroAutor {
 
     @Override
     public ArrayList<LivroAutorExtFromDB> getLivroAutorExt() throws SQLException {
-        String query = "SELECT l.cod_livro, l.isbn, titulo, l.num_edicao, l.preco, l.cod_editora, a.cod_autor, a.nome, a.sexo " +
+        String query = "SELECT l.cod_livro, l.isbn, titulo, l.num_edicao, l.preco, l.cod_editora, e.descricao, a.cod_autor, a.nome, a.sexo " +
                        "FROM livro_autor la " +
                        "LEFT JOIN livro l ON (la.cod_livro = l.cod_livro) " +
                        "LEFT JOIN autor a on (la.cod_autor = a.cod_autor) " +
-                       "ORDER BY isbn;";
+                       "LEFT JOIN editora e ON (l.cod_editora = e.cod_editora) " +
+                       "ORDER BY l.cod_livro;";
 
         PreparedStatement ps = this.conn.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
@@ -157,11 +137,12 @@ public class DaoLivroAutor implements IDaoLivroAutor {
         while(rs.next()){
             resultado.add( new LivroAutorExtFromDB(
                     rs.getInt("cod_autor"),
-                    rs.getInt("isbn"),
+                    rs.getString("isbn"),
                     rs.getString("titulo"),
                     rs.getInt("num_edicao"),
                     rs.getDouble("preco"),
                     rs.getInt("cod_editora"),
+                    rs.getString("descricao"),
                     rs.getInt("cod_autor"),
                     rs.getString("nome"),
                     rs.getString("sexo")));
@@ -171,33 +152,35 @@ public class DaoLivroAutor implements IDaoLivroAutor {
 
     @Override
     public ArrayList<LivroAutorExtFromDB> getLivroAutorExt(LivroAutorExtFiltro livroAutorExtFiltro ) throws SQLException {
-        if( livroAutorExtFiltro == null || ( livroAutorExtFiltro.codAutor.isBlank() &&
+        if( livroAutorExtFiltro == null || ( livroAutorExtFiltro.codLivro.isBlank() &&
                 livroAutorExtFiltro.isbn.isBlank() &&
                 livroAutorExtFiltro.titulo.isBlank() &&
                 livroAutorExtFiltro.numEdicao.isBlank() &&
                 livroAutorExtFiltro.preco.isBlank() &&
                 livroAutorExtFiltro.codEditora.isBlank() &&
+                livroAutorExtFiltro.descricao.isBlank() &&
                 livroAutorExtFiltro.codAutor.isBlank() &&
                 livroAutorExtFiltro.nomeAutor.isBlank() &&
                 livroAutorExtFiltro.sexoAutor.isBlank() )){
             return this.getLivroAutorExt();
         }
 
-        String query = "SELECT l.cod_livro, l.isbn, titulo, l.num_edicao, l.preco, l.cod_editora, a.cod_autor, a.nome, a.sexo " +
+        String query = "SELECT l.cod_livro, l.isbn, titulo, l.num_edicao, l.preco, l.cod_editora, e.descricao, a.cod_autor, a.nome, a.sexo " +
                 "FROM livro_autor la " +
                 "LEFT JOIN livro l ON (la.cod_livro = l.cod_livro) " +
-                "LEFT JOIN autor a on (la.cod_autor = a.cod_autor) ";
+                "LEFT JOIN autor a on (la.cod_autor = a.cod_autor) " +
+                "LEFT JOIN editora e ON (l.cod_editora = e.cod_editora) ";
 
         boolean parametro = false;
 
-        if( livroAutorExtFiltro.codAutor != null && !livroAutorExtFiltro.codAutor.isBlank()){
+        if( livroAutorExtFiltro.codLivro != null && !livroAutorExtFiltro.codLivro.isBlank()){
             query += !parametro ? " WHERE " : " AND ";
-            query += "a.cod_autor = " + livroAutorExtFiltro.codAutor;
+            query += "la.cod_livro = " + livroAutorExtFiltro.codLivro;
             parametro = ( parametro ? parametro : !parametro);
         }
         if( livroAutorExtFiltro.isbn != null && !livroAutorExtFiltro.isbn.isBlank()){
             query += !parametro ? " WHERE " : " AND ";
-            query += "l.isbn = " + livroAutorExtFiltro.isbn;
+            query += "l.isbn like '" + livroAutorExtFiltro.isbn + "%'";
             parametro = ( parametro ? parametro : !parametro);
         }
         if( livroAutorExtFiltro.titulo != null && !livroAutorExtFiltro.titulo.isBlank()){
@@ -220,6 +203,11 @@ public class DaoLivroAutor implements IDaoLivroAutor {
             query += "l.cod_editora = " + livroAutorExtFiltro.codEditora;
             parametro = ( parametro ? parametro : !parametro);
         }
+        if( livroAutorExtFiltro.descricao != null && !livroAutorExtFiltro.descricao.isBlank()){
+            query += !parametro ? " WHERE " : " AND ";
+            query += "UPPER(e.descricao) like '" + livroAutorExtFiltro.descricao.toUpperCase() + "%'";
+            parametro = ( parametro ? parametro : !parametro);
+        }
         if( livroAutorExtFiltro.codAutor != null && !livroAutorExtFiltro.codAutor.isBlank()){
             query += !parametro ? " WHERE " : " AND ";
             query += "la.cod_autor = " + livroAutorExtFiltro.codAutor;
@@ -227,14 +215,16 @@ public class DaoLivroAutor implements IDaoLivroAutor {
         }
         if( livroAutorExtFiltro.nomeAutor != null && !livroAutorExtFiltro.nomeAutor.isBlank()){
             query += !parametro ? " WHERE " : " AND ";
-            query += "UPPER(a.nome) like '" + livroAutorExtFiltro.nomeAutor + "%'";
+            query += "UPPER(a.nome) like '" + livroAutorExtFiltro.nomeAutor.toUpperCase() + "%'";
             parametro = ( parametro ? parametro : !parametro);
         }
         if( livroAutorExtFiltro.sexoAutor != null && !livroAutorExtFiltro.sexoAutor.isBlank()){
             query += !parametro ? " WHERE " : " AND ";
-            query += "UPPER(a.sexo) like '" + livroAutorExtFiltro.sexoAutor + "'";
+            query += "UPPER(a.sexo) like '" + livroAutorExtFiltro.sexoAutor.toUpperCase() + "'";
             parametro = ( parametro ? parametro : !parametro);
         }
+
+        query += " ORDER BY l.cod_livro;";
 
         PreparedStatement ps = this.conn.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
@@ -243,11 +233,12 @@ public class DaoLivroAutor implements IDaoLivroAutor {
         while(rs.next()){
             resultado.add( new LivroAutorExtFromDB(
                     rs.getInt("cod_autor"),
-                    rs.getInt("isbn"),
+                    rs.getString("isbn"),
                     rs.getString("titulo"),
                     rs.getInt("num_edicao"),
                     rs.getDouble("preco"),
                     rs.getInt("cod_editora"),
+                    rs.getString("descricao"),
                     rs.getInt("cod_autor"),
                     rs.getString("nome"),
                     rs.getString("sexo")));

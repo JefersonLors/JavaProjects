@@ -12,4 +12,7 @@ public class LivroAutorFromDB {
         this.codAutor = codAutor;
     }
 
+    public String toString(){
+        return this.codLivro + " " + this.codAutor ;
+    }
 }

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public interface IDaoLivroAutor {
     void postLivroAutor(LivroAutor livroAutorNovo) throws SQLException, AutorInvalidoException, LivroInvalidoException;
-    void putLivroAutor(LivroAutor livroAutorAtualizado) throws SQLException, AutorInvalidoException, LivroInvalidoException;
     void deleteLivroAutor(LivroAutor livroAutorDeletado) throws SQLException, LivroAutorInvalidoException;
     ArrayList<LivroAutorFromDB> getLivroAutor(LivroAutorFiltro livroAutorFiltro) throws SQLException;
     ArrayList<LivroAutorFromDB> getLivroAutor( ) throws SQLException;

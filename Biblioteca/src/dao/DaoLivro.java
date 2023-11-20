@@ -27,7 +27,7 @@ public class DaoLivro implements IDaoLivro {
                 "values (?, ?, ?, ?, ?) ;";
 
         PreparedStatement ps = this.conn.prepareStatement(query);
-        ps.setInt( 1, livroNovo.getIsbn());
+        ps.setString( 1, livroNovo.getIsbn());
         ps.setString(2, livroNovo.getTitulo());
         ps.setInt( 3, livroNovo.getNumEdicao());
         ps.setDouble( 4, livroNovo.getPreco());
@@ -54,7 +54,7 @@ public class DaoLivro implements IDaoLivro {
                 "WHERE cod_livro = ?;";
 
         PreparedStatement ps = this.conn.prepareStatement(query);
-        ps.setInt( 1, livroAtualizado.getIsbn());
+        ps.setString( 1, livroAtualizado.getIsbn());
         ps.setString(2, livroAtualizado.getTitulo());
         ps.setInt( 3, livroAtualizado.getNumEdicao());
         ps.setDouble( 4, livroAtualizado.getPreco());
@@ -102,7 +102,7 @@ public class DaoLivro implements IDaoLivro {
         }
         if( livroFiltro.isbn != null && !livroFiltro.isbn.isBlank()){
             query += !parametro ? " WHERE " : " AND ";
-            query += "isbn = " + livroFiltro.isbn;
+            query += "isbn like '" + livroFiltro.isbn + "%'";
             parametro = ( parametro ? parametro : !parametro);
         }
         if( livroFiltro.titulo != null && !livroFiltro.titulo.isBlank()){
@@ -133,9 +133,9 @@ public class DaoLivro implements IDaoLivro {
         while(rs.next()){
             resultado.add( new LivroFromDB(
                     rs.getInt("cod_livro"),
-                    rs.getInt("isbn"),
+                    rs.getString("isbn"),
                     rs.getString("titulo"),
-                    rs.getInt("num_edicac"),
+                    rs.getInt("num_edicao"),
                     rs.getDouble("preco"),
                     rs.getInt("cod_editora")));
         }
@@ -154,9 +154,9 @@ public class DaoLivro implements IDaoLivro {
         while(rs.next()){
             resultado.add( new LivroFromDB(
                     rs.getInt("cod_livro"),
-                    rs.getInt("isbn"),
+                    rs.getString("isbn"),
                     rs.getString("titulo"),
-                    rs.getInt("num_edicac"),
+                    rs.getInt("num_edicao"),
                     rs.getDouble("preco"),
                     rs.getInt("cod_editora")));
         }

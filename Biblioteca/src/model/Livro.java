@@ -7,13 +7,13 @@ import utils.Utils;
 
 public class Livro {
     private int codLivro;
-    private int isbn;
+    private String isbn;
     private String titulo;
     private int numEdicao;
     private double preco;
     private int codEditora;
 
-    public Livro(int codLivro, int isbn, String titulo, int numEdicao, double preco, int codEditora)
+    public Livro(int codLivro, String isbn, String titulo, int numEdicao, double preco, int codEditora)
             throws TituloInvalidoException, PrecoInvalidoException, CodigoEditoraInvalidoException {
         if(Utils.validaStringVazia(titulo))
             throw new TituloInvalidoException("O título é um campo obrigatório.");
@@ -31,7 +31,7 @@ public class Livro {
         this.preco = preco;
         this.codEditora = codEditora;
     }
-    public Livro(int isbn, String titulo, int numEdicao, double preco, int codEditora)
+    public Livro(String isbn, String titulo, int numEdicao, double preco, int codEditora)
             throws TituloInvalidoException, PrecoInvalidoException, CodigoEditoraInvalidoException {
         this(-1, isbn, titulo, numEdicao, preco, codEditora);
     }
@@ -44,11 +44,11 @@ public class Livro {
         this.codLivro = codLivro;
     }
 
-    public int getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(int isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
