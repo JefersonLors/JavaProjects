@@ -1,13 +1,9 @@
 import dao.*;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.Format;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
 
 import dao.filter.*;
 import dao.fromDB.*;
@@ -15,13 +11,7 @@ import dao.idao.IDaoAutor;
 import dao.idao.IDaoEditora;
 import dao.idao.IDaoLivro;
 import dao.idao.IDaoLivroAutor;
-import model.Autor;
-import model.Editora;
-import model.Livro;
-import model.LivroAutor;
-import org.postgresql.jdbc.SslMode;
 
-import javax.lang.model.type.ArrayType;
 
 public class Main {
     private IDaoAutor iDaoAutor;
