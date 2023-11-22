@@ -10,6 +10,7 @@ public class EditoraFromDB {
         this.descricao = descricao;
         this.endereco = endereco;
     }
+    public String getDecricao(){return this.descricao;}
     public String toString(){
         return "" + this.codEditora + " " + this.descricao + " " + this.endereco;
     }
