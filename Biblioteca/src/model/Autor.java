@@ -5,6 +5,7 @@ import exceptions.NomeInvalidoException;
 import exceptions.SexoInvalidoExeception;
 import utils.Utils;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Autor {
@@ -21,6 +22,7 @@ public class Autor {
             throw new SexoInvalidoExeception("Sexo inválido. Insira M (masculino) ou F (feminino).");
         if(Utils.validaStringVazia(dataNascimento.toString()))
             throw new DataNascimentoInvalidoException("A data de nascimento é um campo obrigatório.");
+        var lista = new ArrayList<Integer> ();
 
         this.codAutor = codAutor;
         this.nome = nome;

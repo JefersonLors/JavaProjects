@@ -3,6 +3,7 @@ package view;
 import dao.DaoEditora;
 import dao.DaoLivro;
 import dao.filter.LivroFiltro;
+import dao.fromDB.AutorFromDB;
 import dao.fromDB.EditoraFromDB;
 import dao.fromDB.LivroFromDB;
 import dao.idao.IDaoEditora;
